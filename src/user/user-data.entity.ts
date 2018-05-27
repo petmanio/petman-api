@@ -25,7 +25,7 @@ export class UserData {
   created: Date;
 
   @UpdateDateColumn()
-  updated;
+  updated: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted: Date;

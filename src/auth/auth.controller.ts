@@ -1,9 +1,11 @@
 import { Body, Controller, Get, HttpStatus, Logger, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
 
 import { LoginFacebookRequestDto } from '../../common/dto/auth/login-facebook-request.dto';
 import { LoginFacebookResponseDto } from '../../common/dto/auth/login-facebook-response.dto';
+import { UserDto } from '../../common/dto/user/user.dto';
 
 import { User } from '../shared/decorator/user-param.decorator';
 import { AuthService } from './auth.service';
@@ -35,9 +37,12 @@ export class AuthController {
   }
 
   @ApiOperation({ title: 'Get current user' })
+  @ApiResponse({ status: 200, type: UserDto })
   @Get('user')
   @UseGuards(AuthGuard('jwt'))
   async user(@User() user) {
-    return user;
+    const userDto = plainToClass(UserDto, user, { enableCircularCheck: false });
+    console.log(userDto);
+    return userDto;
   }
 }

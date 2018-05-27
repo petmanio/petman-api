@@ -25,7 +25,7 @@ export class AuthProvider {
   created: Date;
 
   @UpdateDateColumn()
-  updated;
+  updated: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted: Date;
