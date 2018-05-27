@@ -3,17 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { sign } from 'jsonwebtoken';
 import { Facebook } from 'fb';
-import { Repository } from 'typeorm';
 
 import { JwtPayload } from '../../common/interface';
 import { FbUserDto } from '../../common/dto/user/fb-user.dto';
-import { AuthProviderType } from '../../common/enum';
 
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 
 import { AuthProviderRepository } from './auth-provider.repository';
-import { AuthProvider } from './auth-provider.entity';
 import { LoginFacebookResponseDto } from '../../common/dto/auth/login-facebook-response.dto';
 
 const fb = new Facebook({
@@ -25,7 +22,7 @@ const fb = new Facebook({
 export class AuthService {
   constructor(
     @InjectRepository(AuthProviderRepository)
-    private authProviderRepository: Repository<AuthProvider>,
+    private authProviderRepository: AuthProviderRepository,
     private userService: UserService,
   ) {
   }
@@ -35,8 +32,8 @@ export class AuthService {
     return { token };
   }
 
-  async validateUser(payload: JwtPayload): Promise<any> {
-    // return this;
+  async validateUser(payload: JwtPayload): Promise<User> {
+    return this.userService.findById(payload.id);
   }
 
   async getUserFbDataByAccessToken(accessToken: string): Promise<FbUserDto> {
@@ -49,12 +46,7 @@ export class AuthService {
   }
 
   async findOrCreateFbUser(fbUser: FbUserDto, accessToken: string): Promise<User> {
-    const auth = await this.authProviderRepository.findOne({
-      where: {
-        externalId: fbUser.id,
-      },
-      relations: ['user'],
-    });
+    const auth = await this.authProviderRepository.findOneByExternalId(fbUser.id.toString());
 
     if (auth) {
       auth.accessToken = accessToken;
@@ -62,12 +54,7 @@ export class AuthService {
       return auth.user;
     }
 
-    const authProvider = this.authProviderRepository.create();
-    authProvider.type = AuthProviderType.FACEBOOK;
-    authProvider.externalId = fbUser.id.toString();
-    authProvider.accessToken = accessToken;
-
-    await this.authProviderRepository.save(authProvider);
+    const authProvider = await this.authProviderRepository.createAndSave(fbUser.id.toString(), accessToken);
 
     return await this.userService.create(fbUser, authProvider);
   }

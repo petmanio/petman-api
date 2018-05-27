@@ -5,6 +5,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginFacebookRequestDto } from '../../common/dto/auth/login-facebook-request.dto';
 import { LoginFacebookResponseDto } from '../../common/dto/auth/login-facebook-response.dto';
 
+import { User } from '../shared/decorator/user-param.decorator';
 import { AuthService } from './auth.service';
 
 @ApiBearerAuth()
@@ -36,7 +37,7 @@ export class AuthController {
   @ApiOperation({ title: 'Get current user' })
   @Get('user')
   @UseGuards(AuthGuard('jwt'))
-  user() {
-    // this route is restricted
+  async user(@User() user) {
+    return user;
   }
 }
