@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
 
+import { AuthProvider } from '../auth/auth-provider.entity';
 import { UserData } from './user-data.entity';
-import { AuthProvider } from './auth-provider.entity';
 
 @Entity()
 export class User {

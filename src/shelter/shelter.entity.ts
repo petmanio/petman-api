@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { User } from '../auth/user.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Shelter {
