@@ -1,4 +1,10 @@
 {
   "port": 3000,
-  "secret": "fRmRO5mqrW6gir6TRM06+FjCmo6frE86oxZ8wL+OvqA="
+  "secret": "fRmRO5mqrW6gir6TRM06+FjCmo6frE86oxZ8wL+OvqA=",
+  "tokenExpireIn": 3600,
+  "fb": {
+    "appId": "782744788540027",
+    "appSecret": "7d3159295adb9b081368044ca72e3af2",
+    "scope": "email,gender,first_name,last_name"
+  }
 }

@@ -1,13 +1,11 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Gender } from '../../common/enum';
-import { IsEnum } from 'class-validator';
 
 @Entity()
 export class UserData {
   @PrimaryGeneratedColumn() id: number;
 
-  @IsEnum(Gender)
   @Column({ type: 'enum', enum: Gender, nullable: true })
   gender: Gender;
 

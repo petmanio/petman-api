@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { IsEnum } from 'class-validator';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { AuthProviderType, Gender } from '../../common/enum';
+import { AuthProviderType } from '../../common/enum';
+
+import { User } from '../user/user.entity';
 
 @Entity()
 export class AuthProvider {
@@ -10,12 +11,15 @@ export class AuthProvider {
   @Column({ name: 'external_id', unique: true })
   externalId: string;
 
-  @IsEnum(Gender)
   @Column({ type: 'enum', enum: AuthProviderType })
   type: AuthProviderType;
 
   @Column({ name: 'access_token' })
   accessToken: string;
+
+  @ManyToOne(() => User, user => user.authProviders)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @CreateDateColumn()
   created: Date;
@@ -25,5 +29,4 @@ export class AuthProvider {
 
   @Column({ type: 'timestamp', nullable: true })
   deleted: Date;
-
 }

@@ -1,16 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { IsEmail } from 'class-validator';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { AuthProvider } from '../auth/auth-provider.entity';
 import { UserData } from './user-data.entity';
@@ -19,8 +7,7 @@ import { UserData } from './user-data.entity';
 export class User {
   @PrimaryGeneratedColumn() id: number;
 
-  @IsEmail()
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   email: string;
 
   @Column({ nullable: true })
@@ -30,11 +17,10 @@ export class User {
   @JoinColumn({ name: 'user_data_id' })
   userData: UserData;
 
-  @OneToMany(() => AuthProvider, authProvider => authProvider.id)
+  @OneToMany(() => AuthProvider, authProvider => authProvider.user)
   authProviders: AuthProvider[];
 
   @ManyToMany(type => User)
-  @JoinTable()
   businessUsers: User[];
 
   @CreateDateColumn()

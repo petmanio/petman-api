@@ -13,6 +13,8 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Petman')
     .setDescription('Petman API description')
+    .setBasePath('api')
+    .addBearerAuth()
     .setVersion('1.0')
     .setSchemes('http', 'https')
     .build();
