@@ -1,7 +1,22 @@
 import * as config from 'config';
 import { join } from 'path';
 import { map } from 'lodash';
-import { Body, Controller, FilesInterceptor, Get, Logger, Param, Post, Put, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  FilesInterceptor,
+  Get,
+  HttpStatus,
+  Logger,
+  Param,
+  Post,
+  Put,
+  Res,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
@@ -66,7 +81,6 @@ export class ShelterController {
     @Param('id') id: string,
     @Body() body: ShelterDto,
     @UploadedFiles() images,
-    @SelectedUserParam() selectedUser: User,
     @ShelterParam() shelter: Shelter,
   ): Promise<ShelterDto> {
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
@@ -80,6 +94,16 @@ export class ShelterController {
     shelterDto.isOwner = true;
 
     return shelterDto;
+  }
+
+  @ApiOperation({ title: 'Delete' })
+  @ApiResponse({ status: 204 })
+  @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
+  @Delete(':id')
+  async deleteById(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<Response> {
+
+    await this.shelterService.delete(shelter);
+    return res.status(HttpStatus.NO_CONTENT).end();
   }
 
 }

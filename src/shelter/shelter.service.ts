@@ -28,4 +28,9 @@ export class ShelterService {
     shelter.images = images;
     await this.shelterRepository.save(shelter);
   }
+
+  async delete(shelter: Shelter) {
+    shelter.deleted = new Date();
+    await this.shelterRepository.save(shelter);
+  }
 }
