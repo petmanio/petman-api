@@ -12,16 +12,19 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import { ShelterDto } from '../../common/dto/shelter/shelter.dto';
 import { ShelterCreateDto } from '../../common/dto/shelter/shelter-create.dto';
+import { ListQueryDto } from '../../common/dto/shared/list-query.dto';
+import { ShelterListDto } from '../../common/dto/shelter/shelter-list.dto';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -100,10 +103,27 @@ export class ShelterController {
   @ApiResponse({ status: 204 })
   @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<Response> {
+  async deleteById(@Query() list: ListQueryDto, @ShelterParam() shelter: Shelter, @Res() res): Promise<Response> {
 
     await this.shelterService.delete(shelter);
     return res.status(HttpStatus.NO_CONTENT).end();
   }
 
+  @ApiOperation({ title: 'List' })
+  @ApiImplicitQuery({ name: 'limit', type: Number })
+  @ApiImplicitQuery({ name: 'offset', type: Number })
+  @ApiResponse({ status: 200, type: ShelterListDto })
+  @Get('/')
+  async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListDto> {
+    const shelters = await this.shelterService.getList(query.offset, query.limit);
+    const sheltersDto = plainToClass(ShelterListDto, shelters, { groups: ['api'] });
+
+    sheltersDto.list = map(sheltersDto.list, (shelter) => {
+      shelter.isOwner = shelter.userId === (selectedUser && selectedUser.id);
+      return shelter;
+    });
+
+    return sheltersDto;
+
+  }
 }

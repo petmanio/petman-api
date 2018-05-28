@@ -5,6 +5,8 @@ import { User } from '../user/user.entity';
 
 import { Shelter } from './shelter.entity';
 import { ShelterRepository } from './shelter.repository';
+import { CommonListDto } from '../../common/dto/shared/common-list.dto';
+import { ShelterDto } from '../../common/dto/shelter/shelter.dto';
 
 @Injectable()
 export class ShelterService {
@@ -22,15 +24,22 @@ export class ShelterService {
     return await this.shelterRepository.findById(id);
   }
 
-  async update(shelter: Shelter, description: string, price: number, images: string[]) {
+  async update(shelter: Shelter, description: string, price: number, images: string[]): Promise<Shelter> {
     shelter.price = price;
     shelter.description = description;
     shelter.images = images;
     await this.shelterRepository.save(shelter);
+    return shelter;
   }
 
   async delete(shelter: Shelter) {
     shelter.deleted = new Date();
     await this.shelterRepository.save(shelter);
+  }
+
+  async getList(offset: number, limit: number): Promise<CommonListDto<ShelterDto>> {
+    const data = await this.shelterRepository.getList(offset, limit);
+
+    return { limit: data[1], list: data[0] }
   }
 }

@@ -21,4 +21,14 @@ export class ShelterRepository extends Repository<Shelter> {
   async findById(id: number): Promise<Shelter> {
     return await this.findOne({ id, deleted: null }, { relations: ['user', 'user.userData', 'user.authProviders'] });
   }
+
+  async getList(offset: number, limit: number): Promise<[Shelter[], number]> {
+    return await this.findAndCount({
+      where: { deleted: null },
+      skip: offset,
+      take: limit,
+      order: { updated: 'DESC' },
+      relations: ['user', 'user.userData', 'user.authProviders'],
+    });
+  }
 }
