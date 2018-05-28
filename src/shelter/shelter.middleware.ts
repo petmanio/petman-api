@@ -1,4 +1,4 @@
-import { Injectable, MiddlewareFunction, NestMiddleware, NotFoundException } from '@nestjs/common';
+import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';
 
 import { ShelterService } from './shelter.service';
 
@@ -13,11 +13,7 @@ export class ShelterMiddleware implements NestMiddleware {
       if (!req.params.id) {
         return next();
       }
-      const shelter = await this.shelterService.findById(req.params.id);
-      if (!shelter) {
-        throw new NotFoundException();
-      }
-      req.shelter = shelter;
+      req.shelter = await this.shelterService.findById(req.params.id);
       next();
     };
   }

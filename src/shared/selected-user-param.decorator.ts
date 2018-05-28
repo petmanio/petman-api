@@ -1,3 +1,3 @@
 import { createParamDecorator } from '@nestjs/common';
 
-export const SelectedUser = createParamDecorator((data, req) => req.selectedUser);
+export const SelectedUserParam = createParamDecorator((data, req) => req.selectedUser);

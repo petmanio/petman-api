@@ -1,3 +1,3 @@
 import { createParamDecorator } from '@nestjs/common';
 
-export const Shelter = createParamDecorator((data, req) => req.shelter);
+export const ShelterParam = createParamDecorator((data, req) => req.shelter);

@@ -6,7 +6,7 @@ import { LoginFacebookRequestDto } from '../../common/dto/auth/login-facebook-re
 import { LoginFacebookResponseDto } from '../../common/dto/auth/login-facebook-response.dto';
 import { UserDto } from '../../common/dto/user/user.dto';
 
-import { User } from '../shared/user-param.decorator';
+import { UserParam } from '../shared/user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
 
 import { AuthService } from './auth.service';
@@ -42,7 +42,7 @@ export class AuthController {
   @ApiResponse({ status: 200, type: UserDto })
   @Get('user')
   @UseGuards(AuthGuard)
-  async user(@User() user) {
+  async user(@UserParam() user) {
     return plainToClass(UserDto, user, { groups: ['api'] });
   }
 }

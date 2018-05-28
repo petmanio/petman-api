@@ -21,4 +21,11 @@ export class ShelterService {
   async findById(id: number): Promise<Shelter> {
     return await this.shelterRepository.findById(id);
   }
+
+  async update(shelter: Shelter, description: string, price: number, images: string[]) {
+    shelter.price = price;
+    shelter.description = description;
+    shelter.images = images;
+    await this.shelterRepository.save(shelter);
+  }
 }
