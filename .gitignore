@@ -43,5 +43,6 @@ yarn-error.log
 Thumbs.db
 
 # Server
-src/config/local.ts
-navads-apple-proxy.log
+
+# Statis files
+/upload

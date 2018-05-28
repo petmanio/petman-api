@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from '../user/user.entity';
 
@@ -9,13 +9,15 @@ export class Shelter {
   @Column('text')
   description: string;
 
-  @Column('float')
+  // TODO: without nullable
+  @Column({ type: 'float', nullable: true })
   price: number;
 
   @Column('simple-array')
   images: string[];
 
   @ManyToOne(() => User, user => user.id)
+  @JoinColumn({ name: 'user_id' })
   user: User[];
 
   @CreateDateColumn()

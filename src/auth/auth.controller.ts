@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpStatus, Logger, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Post, Res, Response, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import { LoginFacebookRequestDto } from '../../common/dto/auth/login-facebook-request.dto';
@@ -11,6 +11,7 @@ import { User } from '../shared/user-param.decorator';
 import { AuthService } from './auth.service';
 
 @ApiBearerAuth()
+@ApiUseTags('Auth')
 @Controller('auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
@@ -23,7 +24,7 @@ export class AuthController {
   @ApiOperation({ title: 'Login' })
   @ApiResponse({ status: 501 })
   @Post('login')
-  async login(@Res() res): Promise<any> {
+  async login(@Res() res): Promise<Response> {
     res.status(HttpStatus.NOT_IMPLEMENTED).send();
   }
 
@@ -41,8 +42,6 @@ export class AuthController {
   @Get('user')
   @UseGuards(AuthGuard('jwt'))
   async user(@User() user) {
-    const userDto = plainToClass(UserDto, user, { enableCircularCheck: false });
-    console.log(userDto);
-    return userDto;
+    return plainToClass(UserDto, user);
   }
 }

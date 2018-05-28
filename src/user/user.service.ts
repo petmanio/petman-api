@@ -13,9 +13,9 @@ import { UserDataRepository } from './user-data.repository';
 export class UserService {
   constructor(
     @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepository,
+    private userRepository: UserRepository,
     @InjectRepository(UserDataRepository)
-    private readonly userDataRepository: UserDataRepository,
+    private userDataRepository: UserDataRepository,
   ) {
   }
 
@@ -23,7 +23,7 @@ export class UserService {
     const userData = await this.userDataRepository.createAndSave(fbUser);
     return await this.userRepository.createAndSave(fbUser.email, userData, authProvider);
   }
-  
+
   async findById(id: number): Promise<User> {
     return this.userRepository.findById(id);
   }
