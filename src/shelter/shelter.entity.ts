@@ -9,8 +9,7 @@ export class Shelter {
   @Column('text')
   description: string;
 
-  // TODO: without nullable
-  @Column({ type: 'float', nullable: true })
+  @Column('double precision')
   price: number;
 
   @Column('simple-array')

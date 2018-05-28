@@ -103,7 +103,7 @@ export class ShelterController {
   @ApiResponse({ status: 204 })
   @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
   @Delete(':id')
-  async deleteById(@Query() list: ListQueryDto, @ShelterParam() shelter: Shelter, @Res() res): Promise<Response> {
+  async deleteById(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<Response> {
 
     await this.shelterService.delete(shelter);
     return res.status(HttpStatus.NO_CONTENT).end();
