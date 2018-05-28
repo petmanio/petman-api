@@ -1,5 +1,4 @@
 import { Body, Controller, Get, HttpStatus, Logger, Post, Res, Response, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
@@ -8,6 +7,8 @@ import { LoginFacebookResponseDto } from '../../common/dto/auth/login-facebook-r
 import { UserDto } from '../../common/dto/user/user.dto';
 
 import { User } from '../shared/user-param.decorator';
+import { AuthGuard } from '../shared/auth.guard';
+
 import { AuthService } from './auth.service';
 
 @ApiBearerAuth()
@@ -40,7 +41,7 @@ export class AuthController {
   @ApiOperation({ title: 'Get current user' })
   @ApiResponse({ status: 200, type: UserDto })
   @Get('user')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard)
   async user(@User() user) {
     return plainToClass(UserDto, user, { groups: ['api'] });
   }

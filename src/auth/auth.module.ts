@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { SharedModule } from '../shared/shared.module';
 import { UserModule } from '../user/user.module';
 
 import { AuthProvider } from './auth-provider.entity';
@@ -10,10 +11,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([AuthProvider, AuthProviderRepository]),
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([AuthProvider, AuthProviderRepository]), SharedModule, UserModule],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
 })
