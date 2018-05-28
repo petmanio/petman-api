@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { AuthProviderType } from '../../common/enum';
+import { AuthProviderType } from '@petmanio/common/dist/enum';
 
 import { User } from '../user/user.entity';
 

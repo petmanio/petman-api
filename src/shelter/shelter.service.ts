@@ -5,8 +5,8 @@ import { User } from '../user/user.entity';
 
 import { Shelter } from './shelter.entity';
 import { ShelterRepository } from './shelter.repository';
-import { CommonListDto } from '../../common/dto/shared/common-list.dto';
-import { ShelterDto } from '../../common/dto/shelter/shelter.dto';
+import { CommonListDto } from '@petmanio/common/dist/dto/shared/common-list.dto';
+import { ShelterDto } from '@petmanio/common/dist/dto/shelter/shelter.dto';
 
 @Injectable()
 export class ShelterService {

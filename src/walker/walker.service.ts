@@ -5,8 +5,8 @@ import { User } from '../user/user.entity';
 
 import { Walker } from './walker.entity';
 import { WalkerRepository } from './walker.repository';
-import { CommonListDto } from '../../common/dto/shared/common-list.dto';
-import { WalkerDto } from '../../common/dto/walker/walker.dto';
+import { CommonListDto } from '@petmanio/common/dist/dto/shared/common-list.dto';
+import { WalkerDto } from '@petmanio/common/dist/dto/walker/walker.dto';
 
 @Injectable()
 export class WalkerService {

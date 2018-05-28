@@ -21,10 +21,10 @@ import {
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ShelterDto } from '../../common/dto/shelter/shelter.dto';
-import { ShelterCreateDto } from '../../common/dto/shelter/shelter-create.dto';
-import { ListQueryDto } from '../../common/dto/shared/list-query.dto';
-import { ShelterListDto } from '../../common/dto/shelter/shelter-list.dto';
+import { ShelterDto } from '@petmanio/common/dist/dto/shelter/shelter.dto';
+import { ShelterCreateDto } from '@petmanio/common/dist/dto/shelter/shelter-create.dto';
+import { ListQueryDto } from '@petmanio/common/dist/dto/shared/list-query.dto';
+import { ShelterListDto } from '@petmanio/common/dist/dto/shelter/shelter-list.dto';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';

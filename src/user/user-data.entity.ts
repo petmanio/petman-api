@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { Gender } from '../../common/enum';
+import { Gender } from '@petmanio/common/dist/enum';
 
 @Entity()
 export class UserData {

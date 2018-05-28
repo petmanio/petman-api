@@ -2,9 +2,9 @@ import { Body, Controller, Get, HttpStatus, Logger, Post, Res, Response, UseGuar
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { LoginFacebookRequestDto } from '../../common/dto/auth/login-facebook-request.dto';
-import { LoginFacebookResponseDto } from '../../common/dto/auth/login-facebook-response.dto';
-import { UserDto } from '../../common/dto/user/user.dto';
+import { LoginFacebookRequestDto } from '@petmanio/common/dist/dto/auth/login-facebook-request.dto';
+import { LoginFacebookResponseDto } from '@petmanio/common/dist/dto/auth/login-facebook-response.dto';
+import { UserDto } from '@petmanio/common/dist/dto/user/user.dto';
 
 import { UserParam } from '../shared/user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
