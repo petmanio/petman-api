@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
 import { ShelterModule } from './shelter/shelter.module';
 import { WalkerModule } from './walker/walker.module';
+import { AdoptModule } from './adopt/adopt.module';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -20,6 +21,7 @@ import { UserMiddleware } from './shared/user.middleware';
     UserModule,
     ShelterModule,
     WalkerModule,
+    AdoptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
