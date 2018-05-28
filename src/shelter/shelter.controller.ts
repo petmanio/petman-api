@@ -23,7 +23,10 @@ import { ShelterCreateDto } from '../../common/dto/shelter/shelter-create.dto';
 import { SelectedUser } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
 
+import { User } from '../user/user.entity';
+
 import { ShelterService } from './shelter.service';
+import { Shelter } from './shelter-param.decorator';
 
 const UPLOAD_SUB_PATH = '/shelters';
 
@@ -42,7 +45,7 @@ export class ShelterController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Post('/')
-  async create(@Body() body: ShelterCreateDto, @UploadedFiles() images, @SelectedUser() selectedUser): Promise<ShelterDto> {
+  async create(@Body() body: ShelterCreateDto, @UploadedFiles() images, @SelectedUser() selectedUser: User): Promise<ShelterDto> {
     body.images = map(images, file => join(UPLOAD_SUB_PATH, file.filename));
 
     const shelter = await this.shelterService.create(body.description, body.price, body.images, selectedUser);
@@ -55,12 +58,7 @@ export class ShelterController {
   @ApiOperation({ title: 'Get by id' })
   @ApiResponse({ status: 200, type: ShelterDto })
   @Get(':id')
-  async findOne(@Param('id') id: string, @SelectedUser() selectedUser): Promise<ShelterDto> {
-    const shelter = await this.shelterService.findById(parseInt(id, 0));
-    if (!shelter) {
-      throw new NotFoundException();
-    }
-
+  async findById(@Param('id') id: string, @SelectedUser() selectedUser: User, @Shelter() shelter: Shelter): Promise<ShelterDto> {
     const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
     shelterDto.isOwner = shelterDto.user.id === (selectedUser && selectedUser.id);
 

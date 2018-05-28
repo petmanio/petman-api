@@ -18,7 +18,7 @@ export class Shelter {
 
   @ManyToOne(() => User, user => user.id)
   @JoinColumn({ name: 'user_id' })
-  user: User[];
+  user: User;
 
   @CreateDateColumn()
   created: Date;

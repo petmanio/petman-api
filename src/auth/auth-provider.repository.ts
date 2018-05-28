@@ -18,12 +18,6 @@ export class AuthProviderRepository extends Repository<AuthProvider> {
   }
 
   async findOneByExternalId(externalId: string): Promise<AuthProvider> {
-    return this.findOne({
-      where: {
-        externalId,
-        deleted: null,
-      },
-      relations: ['user'],
-    });
+    return this.findOne({ externalId, deleted: null }, { relations: ['user'] });
   }
 }

@@ -19,6 +19,6 @@ export class ShelterRepository extends Repository<Shelter> {
   }
 
   async findById(id: number): Promise<Shelter> {
-    return await this.findOne({ id, deleted: null, relations: ['user', 'user.userData', 'user.authProviders'] });
+    return await this.findOne({ id, deleted: null }, { relations: ['user', 'user.userData', 'user.authProviders'] });
   }
 }
