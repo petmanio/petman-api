@@ -45,7 +45,7 @@ export class ShelterController {
     body.images = map(images, file => join(UPLOAD_SUB_PATH, file.filename));
 
     const shelter = await this.shelterService.create(body.description, body.price, body.images, user);
-    const shelterDto = plainToClass(ShelterDto, shelter);
+    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
     shelterDto.isOwner = true;
 
     return shelterDto;
@@ -60,7 +60,7 @@ export class ShelterController {
       throw new NotFoundException();
     }
 
-    const shelterDto = plainToClass(ShelterDto, shelter);
+    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
     shelterDto.isOwner = shelterDto.user.id === user.id;
 
     return shelterDto;

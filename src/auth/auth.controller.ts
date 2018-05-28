@@ -42,6 +42,6 @@ export class AuthController {
   @Get('user')
   @UseGuards(AuthGuard('jwt'))
   async user(@User() user) {
-    return plainToClass(UserDto, user);
+    return plainToClass(UserDto, user, { groups: ['api'] });
   }
 }

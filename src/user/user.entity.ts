@@ -1,4 +1,15 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { AuthProvider } from '../auth/auth-provider.entity';
 import { UserData } from './user-data.entity';
@@ -21,6 +32,7 @@ export class User {
   authProviders: AuthProvider[];
 
   @ManyToMany(type => User)
+  @JoinTable()
   businessUsers: User[];
 
   @CreateDateColumn()
