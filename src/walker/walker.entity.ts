@@ -9,8 +9,8 @@ export class Walker {
   @Column('text')
   description: string;
 
-  @Column('simple-array')
-  images: string[];
+  @Column('double precision')
+  price: number;
 
   @ManyToOne(() => User, user => user.id)
   @JoinColumn({ name: 'user_id' })

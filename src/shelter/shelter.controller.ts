@@ -21,10 +21,10 @@ import {
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ShelterDto } from '@petmanio/common/dist/dto/shelter/shelter.dto';
-import { ShelterCreateDto } from '@petmanio/common/dist/dto/shelter/shelter-create.dto';
-import { ListQueryDto } from '@petmanio/common/dist/dto/shared/list-query.dto';
-import { ShelterListDto } from '@petmanio/common/dist/dto/shelter/shelter-list.dto';
+import { ShelterDto } from '@petmanio/common/dto/shelter/shelter.dto';
+import { ShelterCreateDto } from '@petmanio/common/dto/shelter/shelter-create.dto';
+import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
+import { ShelterListDto } from '@petmanio/common/dto/shelter/shelter-list.dto';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -68,7 +68,7 @@ export class ShelterController {
   @ApiResponse({ status: 200, type: ShelterDto })
   @UseGuards(ShelterExistsGuard)
   @Get(':id')
-  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @ShelterParam() shelter: ShelterParam): Promise<ShelterDto> {
+  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @ShelterParam() shelter: Shelter): Promise<ShelterDto> {
     const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
     shelterDto.isOwner = shelterDto.user.id === (selectedUser && selectedUser.id);
 
@@ -88,8 +88,8 @@ export class ShelterController {
   ): Promise<ShelterDto> {
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
-      ...map<any>(images, image => image.path.replace(config.get('uploadDir'), '')),
-      ...map<any>(body.images, image => image.replace(/^.*(?=(\/images))/, '')),
+      ...map(images, image => image.path.replace(config.get('uploadDir'), '')),
+      ...map(body.images, image => image.replace(/^.*(?=(\/images))/, '')),
     ];
 
     await this.shelterService.update(shelter, body.description, body.price, body.images);
@@ -103,10 +103,10 @@ export class ShelterController {
   @ApiResponse({ status: 204 })
   @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<Response> {
+  async deleteById(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<void> {
 
     await this.shelterService.delete(shelter);
-    return res.status(HttpStatus.NO_CONTENT).end();
+    res.status(HttpStatus.NO_CONTENT).end();
   }
 
   @ApiOperation({ title: 'List' })
@@ -119,7 +119,7 @@ export class ShelterController {
     const sheltersDto = plainToClass(ShelterListDto, shelters, { groups: ['api'] });
 
     sheltersDto.list = map(sheltersDto.list, (shelter) => {
-      shelter.isOwner = shelter.userId === (selectedUser && selectedUser.id);
+      shelter.isOwner = shelter.user.id === (selectedUser && selectedUser.id);
       return shelter;
     });
 

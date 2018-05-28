@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { FbUserDto } from '@petmanio/common/dist/dto/user/fb-user.dto';
+import { FbUserDto } from '@petmanio/common/dto/user/fb-user.dto';
 
 import { AuthProvider } from '../auth/auth-provider.entity';
 

@@ -3,10 +3,10 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Qu
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { WalkerDto } from '@petmanio/common/dist/dto/walker/walker.dto';
-import { WalkerCreateDto } from '@petmanio/common/dist/dto/walker/walker-create.dto';
-import { ListQueryDto } from '@petmanio/common/dist/dto/shared/list-query.dto';
-import { WalkerListDto } from '@petmanio/common/dist/dto/walker/walker-list.dto';
+import { WalkerDto } from '@petmanio/common/dto/walker/walker.dto';
+import { WalkerCreateDto } from '@petmanio/common/dto/walker/walker-create.dto';
+import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
+import { WalkerListDto } from '@petmanio/common/dto/walker/walker-list.dto';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -45,7 +45,7 @@ export class WalkerController {
   @ApiResponse({ status: 200, type: WalkerDto })
   @UseGuards(WalkerExistsGuard)
   @Get(':id')
-  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: WalkerParam): Promise<WalkerDto> {
+  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: Walker): Promise<WalkerDto> {
     const walkerDto = plainToClass(WalkerDto, walker, { groups: ['api'] });
     walkerDto.isOwner = walkerDto.user.id === (selectedUser && selectedUser.id);
 
@@ -88,7 +88,7 @@ export class WalkerController {
     const walkersDto = plainToClass(WalkerListDto, walkers, { groups: ['api'] });
 
     walkersDto.list = map(walkersDto.list, (walker) => {
-      walker.isOwner = walker.userId === (selectedUser && selectedUser.id);
+      walker.isOwner = walker.user.id === (selectedUser && selectedUser.id);
       return walker;
     });
 

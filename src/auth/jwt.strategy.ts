@@ -4,7 +4,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { JwtPayload } from '@petmanio/common/dist/interface';
+import { JwtPayload } from '@petmanio/common/interface';
 
 import { User } from '../user/user.entity';
 import { AuthService } from './auth.service';
