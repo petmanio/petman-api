@@ -41,7 +41,7 @@ const UPLOAD_SUB_PATH = '/lost-found';
 
 @ApiBearerAuth()
 @ApiUseTags('Lost Found')
-@Controller('lost-found')
+@Controller('api/lost-found')
 export class LostFoundController {
 
   private logger = new Logger(LostFoundController.name);

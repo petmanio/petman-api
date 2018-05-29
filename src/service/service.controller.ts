@@ -9,7 +9,7 @@ import { ServiceService } from './service.service';
 
 @ApiBearerAuth()
 @ApiUseTags('Services')
-@Controller('services')
+@Controller('api/services')
 export class ServiceController {
 
   private logger = new Logger(ServiceController.name);

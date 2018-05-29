@@ -41,7 +41,7 @@ const UPLOAD_SUB_PATH = '/shelters';
 
 @ApiBearerAuth()
 @ApiUseTags('Shelters')
-@Controller('shelters')
+@Controller('api/shelters')
 export class ShelterController {
 
   private logger = new Logger(ShelterController.name);

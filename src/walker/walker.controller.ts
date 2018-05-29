@@ -21,7 +21,7 @@ import { Walker } from './walker.entity';
 
 @ApiBearerAuth()
 @ApiUseTags('Walkers')
-@Controller('walkers')
+@Controller('api/walkers')
 export class WalkerController {
 
   private logger = new Logger(WalkerController.name);

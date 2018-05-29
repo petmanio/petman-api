@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Logger, Post, Res, Response, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 
 @ApiBearerAuth()
 @ApiUseTags('Auth')
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
 

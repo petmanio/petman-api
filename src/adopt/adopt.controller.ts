@@ -41,7 +41,7 @@ const UPLOAD_SUB_PATH = '/adoption';
 
 @ApiBearerAuth()
 @ApiUseTags('Adoption')
-@Controller('adoption')
+@Controller('api/adoption')
 export class AdoptController {
 
   private logger = new Logger(AdoptController.name);

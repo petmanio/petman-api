@@ -10,7 +10,7 @@ import { OrganizationService } from './organization.service';
 
 @ApiBearerAuth()
 @ApiUseTags('Organizations')
-@Controller('organizations')
+@Controller('api/organizations')
 export class OrganizationController {
 
   private logger = new Logger(OrganizationController.name);
