@@ -27,5 +27,4 @@ export class Adopt {
 
   @Column({ type: 'timestamp', nullable: true })
   deleted: Date;
-
 }
