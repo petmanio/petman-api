@@ -13,8 +13,8 @@ export class OrganizationService {
   ) {
   }
 
-  async getList(offset: number, limit: number): Promise<OrganizationListDto> {
-    const data = await this.organizationRepository.getList(offset, limit);
+  async getList(offset: number, limit: number, services: number[]): Promise<OrganizationListDto> {
+    const data = await this.organizationRepository.getList(offset, limit, services);
 
     return { total: data[1], list: data[0] } as OrganizationListDto;
   }

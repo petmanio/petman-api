@@ -18,7 +18,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import { ShelterDto } from '@petmanio/common/dto/shelter/shelter.dto';
@@ -110,8 +110,6 @@ export class ShelterController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiResponse({ status: 200, type: ShelterListDto })
   @Get('/')
   async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListDto> {

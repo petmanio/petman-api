@@ -1,6 +1,6 @@
 import { map } from 'lodash';
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import { WalkerDto } from '@petmanio/common/dto/walker/walker.dto';
@@ -79,8 +79,6 @@ export class WalkerController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiResponse({ status: 200, type: WalkerListDto })
   @Get('/')
   async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<WalkerListDto> {

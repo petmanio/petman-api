@@ -1,5 +1,5 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
@@ -18,8 +18,6 @@ export class ServiceController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiResponse({ status: 200, type: ServiceListDto })
   @Get('/')
   async list(@Query() query: ListQueryDto): Promise<ServiceListDto> {

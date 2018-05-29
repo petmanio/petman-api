@@ -19,7 +19,7 @@ export class Address {
   @Column({ name: 'line_3', nullable: true })
   line3: string;
 
-  @Column('point')
+  @Column({ type: 'point', nullable: true })
   point: Point;
 
   @OneToOne(type => City)

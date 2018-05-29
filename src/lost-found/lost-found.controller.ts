@@ -18,7 +18,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import { LostFoundDto } from '@petmanio/common/dto/lost-found/lost-found.dto';
@@ -110,8 +110,6 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiResponse({ status: 200, type: LostFoundListDto })
   @Get('/')
   async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<LostFoundListDto> {

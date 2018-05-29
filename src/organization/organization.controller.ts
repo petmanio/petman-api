@@ -2,8 +2,8 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
 import { OrganizationListDto } from '@petmanio/common/dto/organization/organization-list.dto';
+import { OrganizationListQueryDto } from '@petmanio/common/dto/organization/organization-list-query.dto';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 
@@ -23,11 +23,12 @@ export class OrganizationController {
 
   @ApiOperation({ title: 'List' })
   @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'offset', type: Number })
+  @ApiImplicitQuery({ name: 'services', type: Number, isArray: true, required: false, collectionFormat: 'multi' })
   @ApiResponse({ status: 200, type: OrganizationListDto })
   @Get('/')
-  async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<OrganizationListDto> {
-    const organizations = await this.organizationService.getList(query.offset, query.limit);
+  async list(@Query() query: OrganizationListQueryDto, @SelectedUserParam() selectedUser: User): Promise<OrganizationListDto> {
+    const listQueryDto = plainToClass(OrganizationListQueryDto, query);
+    const organizations = await this.organizationService.getList(listQueryDto.offset, listQueryDto.limit, listQueryDto.services);
     return plainToClass(OrganizationListDto, organizations, { groups: ['api'] });
   }
 }
