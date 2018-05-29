@@ -8,6 +8,7 @@ import { ShelterModule } from './shelter/shelter.module';
 import { WalkerModule } from './walker/walker.module';
 import { AdoptModule } from './adopt/adopt.module';
 import { LostFoundModule } from './lost-found/lost-found.module';
+import { ServiceModule } from './service/service.module';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -23,7 +24,8 @@ import { UserMiddleware } from './shared/user.middleware';
     ShelterModule,
     WalkerModule,
     AdoptModule,
-    LostFoundModule
+    LostFoundModule,
+    ServiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
