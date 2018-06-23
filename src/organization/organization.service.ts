@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { OrganizationListDto } from '@petmanio/common/dto/organization/organization-list.dto';
-import { PinDto } from '@petmanio/common/dto/shared/pin.dto';
+import { OrganizationListDto, PinDto } from '@petman/common';
 
 import { OrganizationRepository } from './organization.repository';
 

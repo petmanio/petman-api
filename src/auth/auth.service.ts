@@ -4,14 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { sign } from 'jsonwebtoken';
 import { Facebook } from 'fb';
 
-import { JwtPayload } from '@petmanio/common/interface';
-import { FbUserDto } from '@petmanio/common/dto/user/fb-user.dto';
+import { FbUserDto, JwtPayload, LoginFacebookResponseDto } from '@petman/common';
 
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 
 import { AuthProviderRepository } from './auth-provider.repository';
-import { LoginFacebookResponseDto } from '@petmanio/common/dto/auth/login-facebook-response.dto';
 
 const fb = new Facebook({
   appId: config.get('fb.appId'),

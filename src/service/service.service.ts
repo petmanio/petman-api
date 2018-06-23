@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { ServiceListDto } from '@petmanio/common/dto/service/service-list.dto';
+import { ServiceListDto } from '@petman/common';
 
 import { ServiceRepository } from './service.repository';
 
@@ -16,6 +16,6 @@ export class ServiceService {
   async getList(offset: number, limit: number): Promise<ServiceListDto> {
     const data = await this.serviceRepository.getList(offset, limit);
 
-    return <ServiceListDto>{ total: data[1], list: data[0] };
+    return { total: data[1], list: data[0] } as ServiceListDto;
   }
 }

@@ -2,8 +2,7 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
-import { ServiceListDto } from '@petmanio/common/dto/service/service-list.dto';
+import { ListQueryDto, ServiceListDto } from '@petman/common';
 
 import { ServiceService } from './service.service';
 

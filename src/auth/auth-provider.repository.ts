@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 
-import { AuthProviderType } from '@petmanio/common/enum';
+import { AuthProviderType } from '@petman/common';
 
 import { AuthProvider } from './auth-provider.entity';
 

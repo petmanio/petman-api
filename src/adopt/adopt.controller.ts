@@ -21,10 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { AdoptDto } from '@petmanio/common/dto/adopt/adopt.dto';
-import { AdoptCreateDto } from '@petmanio/common/dto/adopt/adopt-create.dto';
-import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
-import { AdoptListDto } from '@petmanio/common/dto/adopt/adopt-list.dto';
+import { AdoptCreateDto, AdoptDto, AdoptListDto, ListQueryDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';

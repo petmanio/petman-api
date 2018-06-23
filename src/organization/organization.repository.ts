@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 
-import { PinDto } from '@petmanio/common/dto/shared/pin.dto';
+import { PinDto } from '@petman/common';
 
 import { Organization } from './organization.entity';
 import { Branch } from './branch.entity';

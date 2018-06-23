@@ -21,10 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { LostFoundDto } from '@petmanio/common/dto/lost-found/lost-found.dto';
-import { LostFoundCreateDto } from '@petmanio/common/dto/lost-found/lost-found-create.dto';
-import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
-import { LostFoundListDto } from '@petmanio/common/dto/lost-found/lost-found-list.dto';
+import { ListQueryDto, LostFoundCreateDto, LostFoundDto, LostFoundListDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';

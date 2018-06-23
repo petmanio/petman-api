@@ -5,7 +5,7 @@ import { User } from '../user/user.entity';
 
 import { Shelter } from './shelter.entity';
 import { ShelterRepository } from './shelter.repository';
-import { ShelterListDto } from '@petmanio/common/dto/shelter/shelter-list.dto';
+import { ShelterListDto } from '@petman/common';
 
 @Injectable()
 export class ShelterService {
@@ -39,6 +39,6 @@ export class ShelterService {
   async getList(offset: number, limit: number): Promise<ShelterListDto> {
     const data = await this.shelterRepository.getList(offset, limit);
 
-    return <ShelterListDto>{ total: data[1], list: data[0] };
+    return { total: data[1], list: data[0] } as ShelterListDto;
   }
 }

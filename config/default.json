@@ -3,6 +3,19 @@
   "secret": "fRmRO5mqrW6gir6TRM06+FjCmo6frE86oxZ8wL+OvqA=",
   "tokenExpireIn": 604800,
   "uploadDir": "/home/andranik/Desktop/petman-api/upload",
+  "allowedOrigin": "http://localhost:4200",
+  "production": false,
+  "orm": {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "andranik",
+    "password": "andant",
+    "database": "petman",
+    "entities": ["src/**/**.entity{.ts,.js}"],
+    "synchronize": true,
+    "logging": true
+  },
   "fb": {
     "appId": "782744788540027",
     "appSecret": "7d3159295adb9b081368044ca72e3af2",

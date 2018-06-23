@@ -5,7 +5,7 @@ import { User } from '../user/user.entity';
 
 import { Adopt } from './adopt.entity';
 import { AdoptRepository } from './adopt.repository';
-import { AdoptListDto } from '@petmanio/common/dto/adopt/adopt-list.dto';
+import { AdoptListDto } from '@petman/common';
 
 @Injectable()
 export class AdoptService {

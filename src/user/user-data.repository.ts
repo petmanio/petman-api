@@ -1,7 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 
-import { FbUserDto } from '@petmanio/common/dto/user/fb-user.dto';
-import { Gender } from '@petmanio/common/enum';
+import { FbUserDto, Gender } from '@petman/common';
 
 import { UserData } from './user-data.entity';
 

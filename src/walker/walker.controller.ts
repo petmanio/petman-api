@@ -3,10 +3,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Qu
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { WalkerDto } from '@petmanio/common/dto/walker/walker.dto';
-import { WalkerCreateDto } from '@petmanio/common/dto/walker/walker-create.dto';
-import { ListQueryDto } from '@petmanio/common/dto/shared/list-query.dto';
-import { WalkerListDto } from '@petmanio/common/dto/walker/walker-list.dto';
+import { ListQueryDto, WalkerCreateDto, WalkerDto, WalkerListDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';

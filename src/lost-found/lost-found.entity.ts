@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { LostFoundType } from '@petmanio/common/enum';
+import { LostFoundType } from '@petman/common';
 
 import { User } from '../user/user.entity';
 

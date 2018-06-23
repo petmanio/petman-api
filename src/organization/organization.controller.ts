@@ -2,9 +2,7 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { PinDto } from '@petmanio/common/dto/shared/pin.dto';
-import { OrganizationListDto } from '@petmanio/common/dto/organization/organization-list.dto';
-import { OrganizationListQueryDto } from '@petmanio/common/dto/organization/organization-list-query.dto';
+import { OrganizationListDto, OrganizationListQueryDto, PinDto } from '@petman/common';
 
 import { OrganizationService } from './organization.service';
 

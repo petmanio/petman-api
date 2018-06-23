@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { Point } from '@petmanio/common/interface';
+import { Point } from '@petman/common';
 
 import { City } from './city.entity';
 import { State } from './state.entity';
