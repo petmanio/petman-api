@@ -21,7 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { AdoptCreateDto, AdoptDto, AdoptListDto, ListQueryDto } from '@petman/common';
+import { AdoptCreateRequestDto, AdoptDto, AdoptListResponseDto, ListQueryRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -51,7 +51,7 @@ export class AdoptController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Post('/')
-  async create(@Body() body: AdoptCreateDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<AdoptDto> {
+  async create(@Body() body: AdoptCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<AdoptDto> {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const adopt = await this.adoptService.create(body.description, body.price, body.images, selectedUser);
@@ -107,11 +107,11 @@ export class AdoptController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: AdoptListDto })
+  @ApiResponse({ status: 200, type: AdoptListResponseDto })
   @Get('/')
-  async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<AdoptListDto> {
+  async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<AdoptListResponseDto> {
     const adoption = await this.adoptService.getList(query.offset, query.limit);
-    const adoptionDto = plainToClass(AdoptListDto, adoption, { groups: ['api'] });
+    const adoptionDto = plainToClass(AdoptListResponseDto, adoption, { groups: ['api'] });
 
     adoptionDto.list = map(adoptionDto.list, (adopt) => {
       adopt.isOwner = adopt.user.id === (selectedUser && selectedUser.id);

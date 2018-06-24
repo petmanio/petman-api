@@ -2,7 +2,7 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { OrganizationListDto, OrganizationListQueryDto, PinDto } from '@petman/common';
+import { OrganizationListResponseDto, OrganizationListQueryRequestDto, PinDto } from '@petman/common';
 
 import { OrganizationService } from './organization.service';
 
@@ -19,12 +19,12 @@ export class OrganizationController {
   @ApiOperation({ title: 'List' })
   @ApiImplicitQuery({ name: 'limit', type: Number })
   @ApiImplicitQuery({ name: 'services', type: Number, isArray: true, required: false, collectionFormat: 'multi' })
-  @ApiResponse({ status: 200, type: OrganizationListDto })
+  @ApiResponse({ status: 200, type: OrganizationListResponseDto })
   @Get('/')
-  async list(@Query() query: OrganizationListQueryDto): Promise<OrganizationListDto> {
-    const listQueryDto = plainToClass(OrganizationListQueryDto, query);
+  async list(@Query() query: OrganizationListQueryRequestDto): Promise<OrganizationListResponseDto> {
+    const listQueryDto = plainToClass(OrganizationListQueryRequestDto, query);
     const organizations = await this.organizationService.getList(listQueryDto.offset, listQueryDto.limit, listQueryDto.services);
-    return plainToClass(OrganizationListDto, organizations, { groups: ['api'] });
+    return plainToClass(OrganizationListResponseDto, organizations, { groups: ['api'] });
   }
 
   @ApiOperation({ title: 'Pins' })

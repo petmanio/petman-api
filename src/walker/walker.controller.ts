@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Qu
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryDto, WalkerCreateDto, WalkerDto, WalkerListDto } from '@petman/common';
+import { ListQueryRequestDto, WalkerCreateRequestDto, WalkerDto, WalkerListResponseDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -30,7 +30,7 @@ export class WalkerController {
   @ApiResponse({ status: 200, type: WalkerDto })
   @UseGuards(AuthGuard)
   @Post('/')
-  async create(@Body() body: WalkerCreateDto, @SelectedUserParam() selectedUser: User): Promise<WalkerDto> {
+  async create(@Body() body: WalkerCreateRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerDto> {
     const walker = await this.walkerService.create(body.description, body.price, selectedUser);
     const walkerDto = plainToClass(WalkerDto, walker, { groups: ['api'] });
     walkerDto.isOwner = true;
@@ -76,11 +76,11 @@ export class WalkerController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: WalkerListDto })
+  @ApiResponse({ status: 200, type: WalkerListResponseDto })
   @Get('/')
-  async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<WalkerListDto> {
+  async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerListResponseDto> {
     const walkers = await this.walkerService.getList(query.offset, query.limit);
-    const walkersDto = plainToClass(WalkerListDto, walkers, { groups: ['api'] });
+    const walkersDto = plainToClass(WalkerListResponseDto, walkers, { groups: ['api'] });
 
     walkersDto.list = map(walkersDto.list, (walker) => {
       walker.isOwner = walker.user.id === (selectedUser && selectedUser.id);

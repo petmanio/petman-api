@@ -21,7 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryDto, LostFoundCreateDto, LostFoundDto, LostFoundListDto } from '@petman/common';
+import { ListQueryRequestDto, LostFoundCreateRequestDto, LostFoundDto, LostFoundListResponseDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -51,7 +51,7 @@ export class LostFoundController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Post('/')
-  async create(@Body() body: LostFoundCreateDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<LostFoundDto> {
+  async create(@Body() body: LostFoundCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<LostFoundDto> {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const lostFound = await this.lostFoundService.create(body.type, body.description, body.images, selectedUser);
@@ -107,11 +107,11 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: LostFoundListDto })
+  @ApiResponse({ status: 200, type: LostFoundListResponseDto })
   @Get('/')
-  async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<LostFoundListDto> {
+  async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<LostFoundListResponseDto> {
     const lostFound = await this.lostFoundService.getList(query.offset, query.limit);
-    const lostFoundDto = plainToClass(LostFoundListDto, lostFound, { groups: ['api'] });
+    const lostFoundDto = plainToClass(LostFoundListResponseDto, lostFound, { groups: ['api'] });
 
     lostFoundDto.list = map(lostFoundDto.list, (item) => {
       item.isOwner = item.user.id === (selectedUser && selectedUser.id);

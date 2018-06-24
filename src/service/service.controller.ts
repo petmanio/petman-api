@@ -2,7 +2,7 @@ import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryDto, ServiceListDto } from '@petman/common';
+import { ListQueryRequestDto, ServiceListResponseDto } from '@petman/common';
 
 import { ServiceService } from './service.service';
 
@@ -17,10 +17,10 @@ export class ServiceController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: ServiceListDto })
+  @ApiResponse({ status: 200, type: ServiceListResponseDto })
   @Get('/')
-  async list(@Query() query: ListQueryDto): Promise<ServiceListDto> {
+  async list(@Query() query: ListQueryRequestDto): Promise<ServiceListResponseDto> {
     const services = await this.serviceService.getList(query.offset, query.limit);
-    return plainToClass(ServiceListDto, services, { groups: ['api'] });
+    return plainToClass(ServiceListResponseDto, services, { groups: ['api'] });
   }
 }

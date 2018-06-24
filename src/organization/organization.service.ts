@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { OrganizationListDto, PinDto } from '@petman/common';
+import { OrganizationListResponseDto, PinDto } from '@petman/common';
 
 import { OrganizationRepository } from './organization.repository';
 
@@ -13,10 +13,10 @@ export class OrganizationService {
   ) {
   }
 
-  async getList(offset: number, limit: number, services: number[]): Promise<OrganizationListDto> {
+  async getList(offset: number, limit: number, services: number[]): Promise<OrganizationListResponseDto> {
     const data = await this.organizationRepository.getList(offset, limit, services);
 
-    return { total: data[1], list: data[0] } as OrganizationListDto;
+    return { total: data[1], list: data[0] } as OrganizationListResponseDto;
   }
 
   async getPins(services: number[]): Promise<PinDto[]> {

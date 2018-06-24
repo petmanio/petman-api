@@ -21,7 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryDto, ShelterCreateDto, ShelterDto, ShelterListDto } from '@petman/common';
+import { ListQueryRequestDto, ShelterCreateRequestDto, ShelterDto, ShelterListResponseDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -51,7 +51,7 @@ export class ShelterController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Post('/')
-  async create(@Body() body: ShelterCreateDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<ShelterDto> {
+  async create(@Body() body: ShelterCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<ShelterDto> {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const shelter = await this.shelterService.create(body.description, body.price, body.images, selectedUser);
@@ -107,11 +107,11 @@ export class ShelterController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: ShelterListDto })
+  @ApiResponse({ status: 200, type: ShelterListResponseDto })
   @Get('/')
-  async list(@Query() query: ListQueryDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListDto> {
+  async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListResponseDto> {
     const shelters = await this.shelterService.getList(query.offset, query.limit);
-    const sheltersDto = plainToClass(ShelterListDto, shelters, { groups: ['api'] });
+    const sheltersDto = plainToClass(ShelterListResponseDto, shelters, { groups: ['api'] });
 
     sheltersDto.list = map(sheltersDto.list, (shelter) => {
       shelter.isOwner = shelter.user.id === (selectedUser && selectedUser.id);

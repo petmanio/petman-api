@@ -5,7 +5,7 @@ import { User } from '../user/user.entity';
 
 import { Adopt } from './adopt.entity';
 import { AdoptRepository } from './adopt.repository';
-import { AdoptListDto } from '@petman/common';
+import { AdoptListResponseDto } from '@petman/common';
 
 @Injectable()
 export class AdoptService {
@@ -36,9 +36,9 @@ export class AdoptService {
     await this.adoptRepository.save(adopt);
   }
 
-  async getList(offset: number, limit: number): Promise<AdoptListDto> {
+  async getList(offset: number, limit: number): Promise<AdoptListResponseDto> {
     const data = await this.adoptRepository.getList(offset, limit);
 
-    return <AdoptListDto>{ total: data[1], list: data[0] };
+    return <AdoptListResponseDto>{ total: data[1], list: data[0] };
   }
 }
