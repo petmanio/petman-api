@@ -18,8 +18,7 @@ import { UserMiddleware } from './shared/user.middleware';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(config.get('orm' +
-      '')),
+    TypeOrmModule.forRoot(config.get('orm')),
 
     SharedModule,
     AuthModule,
