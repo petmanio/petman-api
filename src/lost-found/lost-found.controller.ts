@@ -55,7 +55,7 @@ export class LostFoundController {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const lostFound = await this.lostFoundService.create(body.type, body.description, body.images, selectedUser);
-    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['api'] });
+    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['petman-api'] });
     lostFoundDto.isOwner = true;
 
     return lostFoundDto;
@@ -66,7 +66,7 @@ export class LostFoundController {
   @UseGuards(LostFoundExistsGuard)
   @Get(':id')
   async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @LostFoundParam() lostFound: LostFound): Promise<LostFoundDto> {
-    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['api'] });
+    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['petman-api'] });
     lostFoundDto.isOwner = lostFoundDto.user.id === (selectedUser && selectedUser.id);
 
     return lostFoundDto;
@@ -90,7 +90,7 @@ export class LostFoundController {
     ];
 
     await this.lostFoundService.update(lostFound, body.type, body.description, body.images);
-    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['api'] });
+    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['petman-api'] });
     lostFoundDto.isOwner = true;
 
     return lostFoundDto;
@@ -111,7 +111,7 @@ export class LostFoundController {
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<LostFoundListResponseDto> {
     const lostFound = await this.lostFoundService.getList(query.offset, query.limit);
-    const lostFoundDto = plainToClass(LostFoundListResponseDto, lostFound, { groups: ['api'] });
+    const lostFoundDto = plainToClass(LostFoundListResponseDto, lostFound, { groups: ['petman-api'] });
 
     lostFoundDto.list = map(lostFoundDto.list, (item) => {
       item.isOwner = item.user.id === (selectedUser && selectedUser.id);

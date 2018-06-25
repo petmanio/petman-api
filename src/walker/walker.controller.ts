@@ -32,7 +32,7 @@ export class WalkerController {
   @Post('/')
   async create(@Body() body: WalkerCreateRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerDto> {
     const walker = await this.walkerService.create(body.description, body.price, selectedUser);
-    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['api'] });
+    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['petman-api'] });
     walkerDto.isOwner = true;
 
     return walkerDto;
@@ -43,7 +43,7 @@ export class WalkerController {
   @UseGuards(WalkerExistsGuard)
   @Get(':id')
   async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: Walker): Promise<WalkerDto> {
-    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['api'] });
+    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['petman-api'] });
     walkerDto.isOwner = walkerDto.user.id === (selectedUser && selectedUser.id);
 
     return walkerDto;
@@ -59,7 +59,7 @@ export class WalkerController {
     @WalkerParam() walker: Walker,
   ): Promise<WalkerDto> {
     await this.walkerService.update(walker, body.description, body.price);
-    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['api'] });
+    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['petman-api'] });
     walkerDto.isOwner = true;
 
     return walkerDto;
@@ -80,7 +80,7 @@ export class WalkerController {
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerListResponseDto> {
     const walkers = await this.walkerService.getList(query.offset, query.limit);
-    const walkersDto = plainToClass(WalkerListResponseDto, walkers, { groups: ['api'] });
+    const walkersDto = plainToClass(WalkerListResponseDto, walkers, { groups: ['petman-api'] });
 
     walkersDto.list = map(walkersDto.list, (walker) => {
       walker.isOwner = walker.user.id === (selectedUser && selectedUser.id);

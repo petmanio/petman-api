@@ -41,6 +41,6 @@ export class AuthController {
   @Get('user')
   @UseGuards(AuthGuard)
   async user(@UserParam() user) {
-    return plainToClass(UserDto, user, { groups: ['api'] });
+    return plainToClass(UserDto, user, { groups: ['petman-api'] });
   }
 }

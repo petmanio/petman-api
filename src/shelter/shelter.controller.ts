@@ -55,7 +55,7 @@ export class ShelterController {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const shelter = await this.shelterService.create(body.description, body.price, body.images, selectedUser);
-    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
+    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['petman-api'] });
     shelterDto.isOwner = true;
 
     return shelterDto;
@@ -66,7 +66,7 @@ export class ShelterController {
   @UseGuards(ShelterExistsGuard)
   @Get(':id')
   async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @ShelterParam() shelter: Shelter): Promise<ShelterDto> {
-    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
+    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['petman-api'] });
     shelterDto.isOwner = shelterDto.user.id === (selectedUser && selectedUser.id);
 
     return shelterDto;
@@ -90,7 +90,7 @@ export class ShelterController {
     ];
 
     await this.shelterService.update(shelter, body.description, body.price, body.images);
-    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['api'] });
+    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['petman-api'] });
     shelterDto.isOwner = true;
 
     return shelterDto;
@@ -111,7 +111,7 @@ export class ShelterController {
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListResponseDto> {
     const shelters = await this.shelterService.getList(query.offset, query.limit);
-    const sheltersDto = plainToClass(ShelterListResponseDto, shelters, { groups: ['api'] });
+    const sheltersDto = plainToClass(ShelterListResponseDto, shelters, { groups: ['petman-api'] });
 
     sheltersDto.list = map(sheltersDto.list, (shelter) => {
       shelter.isOwner = shelter.user.id === (selectedUser && selectedUser.id);

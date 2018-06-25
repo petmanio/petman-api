@@ -1,5 +1,6 @@
 import * as config from 'config';
 import * as cors from 'cors';
+import * as express from 'express';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -9,8 +10,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors({ credentials: true, origin: config.get('allowedOrigin') }));
+  app.use('/upload', express.static(config.get('uploadDir')));
   app.useGlobalPipes(new ValidationPipe());
-  app.useStaticAssets(config.get('uploadDir'));
+  // TODO: app.useStaticAssets(config.get('uploadDir'));
 
   const options = new DocumentBuilder()
     .setTitle('Petman')

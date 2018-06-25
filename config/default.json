@@ -2,7 +2,7 @@
   "port": 3000,
   "secret": "fRmRO5mqrW6gir6TRM06+FjCmo6frE86oxZ8wL+OvqA=",
   "tokenExpireIn": 604800,
-  "uploadDir": "/home/andranik/Desktop/petman-api/upload",
+  "uploadDir": "/home/andranik/Project/javascript/petmanio/petman-api/upload",
   "allowedOrigin": "http://localhost:4200",
   "production": false,
   "orm": {

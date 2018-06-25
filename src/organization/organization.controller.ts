@@ -24,7 +24,7 @@ export class OrganizationController {
   async list(@Query() query: OrganizationListQueryRequestDto): Promise<OrganizationListResponseDto> {
     const listQueryDto = plainToClass(OrganizationListQueryRequestDto, query);
     const organizations = await this.organizationService.getList(listQueryDto.offset, listQueryDto.limit, listQueryDto.services);
-    return plainToClass(OrganizationListResponseDto, organizations, { groups: ['api'] });
+    return plainToClass(OrganizationListResponseDto, organizations, { groups: ['petman-api'] });
   }
 
   @ApiOperation({ title: 'Pins' })

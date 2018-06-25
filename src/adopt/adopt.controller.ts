@@ -55,7 +55,7 @@ export class AdoptController {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const adopt = await this.adoptService.create(body.description, body.price, body.images, selectedUser);
-    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['api'] });
+    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
     adoptDto.isOwner = true;
 
     return adoptDto;
@@ -66,7 +66,7 @@ export class AdoptController {
   @UseGuards(AdoptExistsGuard)
   @Get(':id')
   async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @AdoptParam() adopt: Adopt): Promise<AdoptDto> {
-    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['api'] });
+    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
     adoptDto.isOwner = adoptDto.user.id === (selectedUser && selectedUser.id);
 
     return adoptDto;
@@ -90,7 +90,7 @@ export class AdoptController {
     ];
 
     await this.adoptService.update(adopt, body.description, body.price, body.images);
-    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['api'] });
+    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
     adoptDto.isOwner = true;
 
     return adoptDto;
@@ -111,7 +111,7 @@ export class AdoptController {
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<AdoptListResponseDto> {
     const adoption = await this.adoptService.getList(query.offset, query.limit);
-    const adoptionDto = plainToClass(AdoptListResponseDto, adoption, { groups: ['api'] });
+    const adoptionDto = plainToClass(AdoptListResponseDto, adoption, { groups: ['petman-api'] });
 
     adoptionDto.list = map(adoptionDto.list, (adopt) => {
       adopt.isOwner = adopt.user.id === (selectedUser && selectedUser.id);

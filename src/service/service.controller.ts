@@ -21,6 +21,6 @@ export class ServiceController {
   @Get('/')
   async list(@Query() query: ListQueryRequestDto): Promise<ServiceListResponseDto> {
     const services = await this.serviceService.getList(query.offset, query.limit);
-    return plainToClass(ServiceListResponseDto, services, { groups: ['api'] });
+    return plainToClass(ServiceListResponseDto, services, { groups: ['petman-api'] });
   }
 }
