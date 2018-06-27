@@ -2,6 +2,7 @@ import * as config from 'config';
 import { join } from 'path';
 import { map } from 'lodash';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -33,6 +34,7 @@ import { ShelterParam } from './shelter-param.decorator';
 import { ShelterExistsGuard } from './shelter-exists.guard';
 import { ShelterOwnerGuard } from './shelter-owner.guard';
 import { Shelter } from './shelter.entity';
+import { SharedService } from '../shared/shared.service';
 
 const UPLOAD_SUB_PATH = '/shelters';
 
@@ -47,11 +49,14 @@ export class ShelterController {
   }
 
   @ApiOperation({ title: 'Create' })
-  @ApiResponse({ status: 200, type: ShelterDto })
+  @ApiResponse({ status: HttpStatus.OK, type: ShelterDto })
   @UseGuards(AuthGuard)
-  @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
+  @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Post('/')
   async create(@Body() body: ShelterCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<ShelterDto> {
+    if (!images.length) {
+      throw new BadRequestException();
+    }
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const shelter = await this.shelterService.create(body.description, body.price, body.images, selectedUser);
@@ -75,7 +80,7 @@ export class ShelterController {
   @ApiOperation({ title: 'Update' })
   @ApiResponse({ status: 200, type: ShelterDto })
   @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
-  @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
+  @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Put(':id')
   async updateById(
     @Param('id') id: string,
@@ -83,6 +88,9 @@ export class ShelterController {
     @UploadedFiles() images,
     @ShelterParam() shelter: Shelter,
   ): Promise<ShelterDto> {
+    if (!images.length && !body.images) {
+      throw new BadRequestException();
+    }
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
       ...map(images, image => image.path.replace(config.get('uploadDir'), '')),
@@ -119,6 +127,5 @@ export class ShelterController {
     });
 
     return sheltersDto;
-
   }
 }

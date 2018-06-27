@@ -5,6 +5,7 @@ import { UserModule } from '../user/user.module';
 
 import { UserMiddleware } from './user.middleware';
 import { AuthGuard } from './auth.guard';
+import { SharedService } from './shared.service';
 import { City } from './city.entity';
 import { CityRepository } from './city.repository';
 import { State } from './state.entity';
@@ -19,7 +20,7 @@ import { AddressRepository } from './address.repository';
     TypeOrmModule.forFeature([City, CityRepository, State, StateRepository, Country, CountryRepository, Address, AddressRepository]),
     UserModule,
   ],
-  providers: [UserMiddleware, AuthGuard],
+  providers: [UserMiddleware, AuthGuard, SharedService],
   controllers: [],
   exports: [AuthGuard],
 })
