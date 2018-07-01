@@ -88,13 +88,13 @@ export class ShelterController {
     @UploadedFiles() images,
     @ShelterParam() shelter: Shelter,
   ): Promise<ShelterDto> {
-    if (!images.length && !body.images) {
+    if (!images.length && !body.images.length) {
       throw new BadRequestException();
     }
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
-      ...map(images, image => image.path.replace(config.get('uploadDir'), '')),
-      ...map(body.images, image => image.replace(/^.*(?=(\/images))/, '')),
+      ...map(images, image => join(UPLOAD_SUB_PATH, image.filename)),
+      ...map(body.images, image => join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1])),
     ];
 
     await this.shelterService.update(shelter, body.description, body.price, body.images);
