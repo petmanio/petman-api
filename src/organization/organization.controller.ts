@@ -1,8 +1,8 @@
-import { Controller, Get, Logger, Query } from '@nestjs/common';
+import { Controller, Delete, Get, HttpStatus, Logger, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { OrganizationListResponseDto, OrganizationListQueryRequestDto, PinDto } from '@petman/common';
+import { OrganizationListQueryRequestDto, OrganizationListResponseDto, PinDto } from '@petman/common';
 
 import { OrganizationService } from './organization.service';
 
@@ -14,6 +14,34 @@ export class OrganizationController {
   private logger = new Logger(OrganizationController.name);
 
   constructor(private organizationService: OrganizationService) {
+  }
+
+  @ApiOperation({ title: 'Create' })
+  @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
+  @Post('/')
+  async create(@Res() res) {
+    res.status(HttpStatus.NOT_IMPLEMENTED).end();
+  }
+
+  @ApiOperation({ title: 'Get' })
+  @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
+  @Get(':id')
+  async findById(@Res() res) {
+    res.status(HttpStatus.NOT_IMPLEMENTED).end();
+  }
+
+  @ApiOperation({ title: 'Update' })
+  @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
+  @Put(':id')
+  async updateById(@Res() res) {
+    res.status(HttpStatus.NOT_IMPLEMENTED).end();
+  }
+
+  @ApiOperation({ title: 'Delete' })
+  @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
+  @Delete(':id')
+  async deleteById(@Res() res) {
+    res.status(HttpStatus.NOT_IMPLEMENTED).end();
   }
 
   @ApiOperation({ title: 'List' })
