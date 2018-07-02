@@ -2,7 +2,7 @@ import { Controller, Delete, Get, HttpStatus, Logger, Post, Put, Query, Res } fr
 import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { OrganizationListQueryRequestDto, OrganizationListResponseDto, PinDto } from '@petman/common';
+import { OrganizationListQueryRequestDto, OrganizationListResponseDto, OrganizationPinsQueryRequestDto, PinDto } from '@petman/common';
 
 import { OrganizationService } from './organization.service';
 
@@ -21,6 +21,18 @@ export class OrganizationController {
   @Post('/')
   async create(@Res() res) {
     res.status(HttpStatus.NOT_IMPLEMENTED).end();
+  }
+
+  @ApiOperation({ title: 'Pins' })
+  @ApiImplicitQuery({ name: 'offset', type: Number })
+  @ApiImplicitQuery({ name: 'limit', type: Number })
+  @ApiImplicitQuery({ name: 'services', type: Number, isArray: true, required: false, collectionFormat: 'multi' })
+  @ApiResponse({ status: 200, type: PinDto, isArray: true })
+  @Get('pins')
+  async pins(@Query() query: OrganizationPinsQueryRequestDto): Promise<PinDto[]> {
+    const listQueryDto = plainToClass(OrganizationPinsQueryRequestDto, query);
+    const pins = await this.organizationService.getPins(listQueryDto.services);
+    return plainToClass(PinDto, pins);
   }
 
   @ApiOperation({ title: 'Get' })
@@ -45,6 +57,7 @@ export class OrganizationController {
   }
 
   @ApiOperation({ title: 'List' })
+  @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiImplicitQuery({ name: 'limit', type: Number })
   @ApiImplicitQuery({ name: 'services', type: Number, isArray: true, required: false, collectionFormat: 'multi' })
   @ApiResponse({ status: 200, type: OrganizationListResponseDto })
@@ -53,19 +66,5 @@ export class OrganizationController {
     const listQueryDto = plainToClass(OrganizationListQueryRequestDto, query);
     const organizations = await this.organizationService.getList(listQueryDto.offset, listQueryDto.limit, listQueryDto.services);
     return plainToClass(OrganizationListResponseDto, organizations, { groups: ['petman-api'] });
-  }
-
-  @ApiOperation({ title: 'Pins' })
-  @ApiImplicitQuery({ name: 'services', required: false, isArray: true, collectionFormat: 'multi' })
-  @ApiResponse({ status: 200, type: PinDto, isArray: true })
-  @Get('pins')
-  async pins(@Query('services') services: number[]): Promise<PinDto[]> {
-    if (!services) {
-      services = [];
-    }
-    services = typeof services === 'string' ? [services] : services;
-
-    const pins = await this.organizationService.getPins(services);
-    return plainToClass(PinDto, pins);
   }
 }
