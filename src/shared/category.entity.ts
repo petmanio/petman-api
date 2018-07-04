@@ -1,13 +1,16 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class Service {
+export class Category {
   @PrimaryGeneratedColumn() id: number;
 
   @Column({ length: 150 })
-  title: string;
+  name: string;
 
-  @Column('text')
+  @Column({ length: 50 })
+  label: string;
+
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @CreateDateColumn()

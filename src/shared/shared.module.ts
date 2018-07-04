@@ -14,15 +14,23 @@ import { Country } from './country.entity';
 import { CountryRepository } from './country.repository';
 import { Address } from './address.entity';
 import { AddressRepository } from './address.repository';
+import { Category } from './category.entity';
+import { CategoryRepository } from './category.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([City, CityRepository, State, StateRepository, Country, CountryRepository, Address, AddressRepository]),
+    TypeOrmModule.forFeature([
+      City, CityRepository,
+      State, StateRepository,
+      Country, CountryRepository,
+      Address, AddressRepository,
+      Category, CategoryRepository,
+    ]),
     UserModule,
   ],
   providers: [UserMiddleware, AuthGuard, SharedService],
   controllers: [],
-  exports: [AuthGuard],
+  exports: [AuthGuard, SharedService],
 })
 export class SharedModule {
 }

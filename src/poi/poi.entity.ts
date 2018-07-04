@@ -1,27 +1,15 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from '../user/user.entity';
 import { Address } from '../shared/address.entity';
-import { Service } from '../service/service.entity';
-import { Branch } from './branch.entity';
+import { Category } from '../shared/category.entity';
 
 @Entity()
-export class Organization {
+export class Poi {
   @PrimaryGeneratedColumn() id: number;
 
   @Column({ length: 150 })
-  title: string;
+  name: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;
@@ -37,12 +25,16 @@ export class Organization {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToMany(type => Service)
-  @JoinTable()
-  services: Service[];
+  @ManyToOne(() => Category, category => category.id)
+  @JoinColumn({ name: 'primary_category_id' })
+  primaryCategory: Category;
 
-  @OneToMany(() => Branch, branch => branch.organization)
-  branches: Branch[];
+  @ManyToOne(type => Poi, poi => poi.branches)
+  @JoinColumn({ name: 'main_id' })
+  main: Poi;
+
+  @OneToMany(type => Poi, poi => poi.main)
+  branches: Poi[];
 
   @CreateDateColumn()
   created: Date;

@@ -9,8 +9,7 @@ import { ShelterModule } from './shelter/shelter.module';
 import { WalkerModule } from './walker/walker.module';
 import { AdoptModule } from './adopt/adopt.module';
 import { LostFoundModule } from './lost-found/lost-found.module';
-import { ServiceModule } from './service/service.module';
-import { OrganizationModule } from './organization/organization.module';
+import { PoiModule } from './poi/poi.module';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -27,8 +26,7 @@ import { UserMiddleware } from './shared/user.middleware';
     WalkerModule,
     AdoptModule,
     LostFoundModule,
-    ServiceModule,
-    OrganizationModule,
+    PoiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
