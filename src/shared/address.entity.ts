@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Point } from '@petman/common';
 
@@ -22,15 +22,15 @@ export class Address {
   @Column({ type: 'point', nullable: true })
   point: Point;
 
-  @OneToOne(type => City)
+  @ManyToOne(() => City, city => city.id)
   @JoinColumn({ name: 'city_id' })
   city: City;
 
-  @OneToOne(type => State)
+  @ManyToOne(() => State, state => state.id)
   @JoinColumn({ name: 'state_id' })
   state: State;
 
-  @OneToOne(type => Country)
+  @ManyToOne(() => Country, country => country.id)
   @JoinColumn({ name: 'country_id' })
   country: Country;
 

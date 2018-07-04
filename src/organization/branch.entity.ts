@@ -1,15 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Address } from '../shared/address.entity';
 import { Service } from '../service/service.entity';
@@ -31,7 +20,7 @@ export class Branch {
   @Column({ type: 'boolean', default: 'false' })
   main: boolean;
 
-  @OneToOne(type => Address)
+  @ManyToOne(() => Address, address => address.id)
   @JoinColumn({ name: 'address_id' })
   address: Address;
 

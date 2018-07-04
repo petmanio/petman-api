@@ -7,7 +7,6 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -30,7 +29,7 @@ export class Organization {
   @Column('simple-array')
   images: string[];
 
-  @OneToOne(type => Address, { nullable: true })
+  @ManyToOne(() => Address, address => address.id)
   @JoinColumn({ name: 'address_id' })
   address: Address;
 
