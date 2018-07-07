@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, FindConditions, In, Repository } from 'typeorm';
 
 import { PinDto } from '@petman/common';
 
@@ -13,26 +13,31 @@ export class PoiRepository extends Repository<Poi> {
   }
 
   async getList(offset: number, limit: number, categories: number[]): Promise<[Poi[], number]> {
-    return await this.createQueryBuilder('poi')
-      .skip(offset)
-      .limit(limit)
-      .orderBy('poi.updated', 'DESC')
-      .andWhere(...PoiRepository.categoriesFindOptions(categories, 'poi'))
-      .leftJoinAndSelect('poi.primaryCategory', 'primaryCategory')
-      .leftJoinAndSelect('poi.address', 'address')
-      .leftJoinAndSelect('address.city', 'city')
-      .leftJoinAndSelect('address.state', 'state')
-      .leftJoinAndSelect('address.country', 'country')
-      .getManyAndCount();
+    const filterQuery: FindConditions<Poi> = {};
+    if (categories && categories.length) {
+      filterQuery.primaryCategory = In(categories);
+    }
+    return await this.findAndCount({
+      where: { deleted: null, ...filterQuery },
+      skip: offset,
+      take: limit,
+      order: { updated: 'DESC' },
+      relations: ['primaryCategory', 'address', 'address.city', 'address.state', 'address.country'],
+    });
   }
 
   async getPins(categories: number[]): Promise<PinDto[]> {
     const pois = await this.createQueryBuilder('poi')
       .andWhere(...PoiRepository.categoriesFindOptions(categories, 'poi'))
-      .innerJoinAndSelect('poi.address', 'address', 'address.point NOTNULL AND address.deleted IS NULL')
+      .innerJoinAndSelect('poi.address', 'address', 'address.point NOTNULL')
+      .innerJoinAndSelect('address.city', 'city')
+      .innerJoinAndSelect('address.state', 'state')
+      .innerJoinAndSelect('address.country', 'country')
+      .innerJoinAndSelect('poi.primaryCategory', 'primaryCategory')
       .select([
-        'poi.name', 'poi.description',
-        'address.line1', 'address.line2', 'address.line3', 'address.point',
+        'poi.id', 'poi.name', 'poi.description',
+        'primaryCategory.name', 'primaryCategory.label',
+        'country.name', 'state.name', 'city.name', 'address.line1', 'address.line2', 'address.line3', 'address.point',
       ])
       .getMany();
 
