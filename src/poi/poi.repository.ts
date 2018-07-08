@@ -35,7 +35,7 @@ export class PoiRepository extends Repository<Poi> {
       .innerJoinAndSelect('address.country', 'country')
       .innerJoinAndSelect('poi.primaryCategory', 'primaryCategory')
       .select([
-        'poi.id', 'poi.name', 'poi.description',
+        'poi.id', 'poi.name', 'poi.description', 'poi.avatar',
         'primaryCategory.name', 'primaryCategory.label',
         'country.name', 'state.name', 'city.name', 'address.line1', 'address.line2', 'address.line3', 'address.point',
       ])

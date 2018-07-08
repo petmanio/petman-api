@@ -41,7 +41,7 @@ export class PoiController {
   async pins(@Query() query: PoiPinsQueryRequestDto): Promise<PinDto[]> {
     const listQueryDto = plainToClass(PoiPinsQueryRequestDto, query);
     const pins = await this.poiService.getPins(listQueryDto.primaryCategories);
-    return plainToClass(PinDto, pins);
+    return plainToClass(PinDto, pins, { groups: ['petman-api'] });
   }
 
   @ApiOperation({ title: 'Create' })

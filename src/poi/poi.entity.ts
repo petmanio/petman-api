@@ -14,7 +14,10 @@ export class Poi {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column('simple-array')
+  @Column({ length: 150 })
+  avatar: string;
+
+  @Column({ type: 'simple-array', nullable: true })
   images: string[];
 
   @ManyToOne(() => Address, address => address.id)
