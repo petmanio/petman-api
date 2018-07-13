@@ -1,4 +1,4 @@
-# petman-api
+# @petman/api
 
 ## Description
 
