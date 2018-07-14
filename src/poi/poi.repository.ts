@@ -29,7 +29,7 @@ export class PoiRepository extends Repository<Poi> {
   async getPins(categories: number[]): Promise<PinDto[]> {
     // FIXME: TS2556: Expected 1-2 arguments, but got 0 or more.
     const findOptions: any = PoiRepository.categoriesFindOptions(categories, 'poi');
-    const pois: any = await this.createQueryBuilder('poi')
+    const pois = await this.createQueryBuilder('poi')
       .andWhere(findOptions[0], findOptions[1])
       .innerJoinAndSelect('poi.address', 'address', 'address.point NOTNULL')
       .innerJoinAndSelect('address.city', 'city')
@@ -43,6 +43,7 @@ export class PoiRepository extends Repository<Poi> {
       ])
       .getMany();
 
-    return [...pois];
+    // FIXME: TS2352: Type 'Poi[]' cannot be converted to type 'PinDto[]'.
+    return [...pois as any];
   }
 }
