@@ -17,8 +17,8 @@
     "logging": true
   },
   "fb": {
-    "appId": "782744788540027",
-    "appSecret": "7d3159295adb9b081368044ca72e3af2",
+    "appId": "614253672289323",
+    "appSecret": "68690045c2a2a2268b06a4465128abd0",
     "scope": "email,gender,first_name,last_name"
   }
 }
