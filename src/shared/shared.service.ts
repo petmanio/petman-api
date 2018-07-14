@@ -21,7 +21,7 @@ export class SharedService {
         if (mimetype && extname) {
           return cb(null, true);
         }
-        cb('Error: File upload only supports the following filetypes - ' + filetypes);
+        cb(new Error('File upload only supports the following filetypes - ' + filetypes), false);
       },
     };
   }

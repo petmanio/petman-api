@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { PinDto, PoiListResponseDto } from '@petman/common';
+import { PinDto, PoiDto, PoiListResponseDto } from '@petman/common';
 
 import { PoiRepository } from './poi.repository';
 
@@ -12,10 +12,10 @@ export class PoiService {
   ) {
   }
 
-  async getList(offset: number, limit: number, services: number[]): Promise<PoiListResponseDto> {
+  async getList(offset: number, limit: number, services: number[]) {
     const data = await this.poiRepository.getList(offset, limit, services);
 
-    return { total: data[1], list: data[0] } as PoiListResponseDto;
+    return { total: data[1], list: data[0] };
   }
 
   async getPins(services: number[]): Promise<PinDto[]> {

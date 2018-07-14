@@ -27,8 +27,10 @@ export class PoiRepository extends Repository<Poi> {
   }
 
   async getPins(categories: number[]): Promise<PinDto[]> {
-    const pois = await this.createQueryBuilder('poi')
-      .andWhere(...PoiRepository.categoriesFindOptions(categories, 'poi'))
+    // FIXME: TS2556: Expected 1-2 arguments, but got 0 or more.
+    const findOptions: any = PoiRepository.categoriesFindOptions(categories, 'poi');
+    const pois: any = await this.createQueryBuilder('poi')
+      .andWhere(findOptions[0], findOptions[1])
       .innerJoinAndSelect('poi.address', 'address', 'address.point NOTNULL')
       .innerJoinAndSelect('address.city', 'city')
       .innerJoinAndSelect('address.state', 'state')
