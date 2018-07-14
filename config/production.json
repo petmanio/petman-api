@@ -1,0 +1,24 @@
+{
+  "port": 3000,
+  "secret": "td0S+PAlxisWlYYe86lwxs/HN2OdKO2U9Pb1LuFEh3g=",
+  "tokenExpireIn": 604800,
+  "uploadDir": "/opt/petman-api/upload",
+  "allowedOrigin": "",
+  "production": true,
+  "orm": {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "",
+    "password": "",
+    "database": "",
+    "entities": ["dist/**/**.entity{.ts,.js}"],
+    "synchronize": true,
+    "logging": true
+  },
+  "fb": {
+    "appId": "424363951255305",
+    "appSecret": "353b283172fe3c8a691b4aa2ed6a66de",
+    "scope": "email,gender,first_name,last_name"
+  }
+}
