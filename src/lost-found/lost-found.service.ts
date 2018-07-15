@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { LostFoundListResponseDto, LostFoundType } from '@petman/common';
+import { LostFoundType } from '@petman/common';
 
 import { User } from '../user/user.entity';
 
@@ -37,9 +37,9 @@ export class LostFoundService {
     await this.lostFoundRepository.save(lostFound);
   }
 
-  async getList(offset: number, limit: number): Promise<LostFoundListResponseDto> {
+  async getList(offset: number, limit: number) {
     const data = await this.lostFoundRepository.getList(offset, limit);
 
-    return { total: data[1], list: data[0] } as LostFoundListResponseDto;
+    return { total: data[1], list: data[0] };
   }
 }

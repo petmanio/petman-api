@@ -19,7 +19,7 @@ export class UserMiddleware implements NestMiddleware {
       selectedUserId = selectedUserId && parseInt(selectedUserId, 0);
 
       try {
-        const { id } = <any>verify(token, config.get('secret'));
+        const { id } = verify(token, config.get('secret')) as any;
         req.user = await this.userService.findById(id);
 
         const selectedUser = find(req.user ? req.user.businessUsers : [], { id: selectedUserId });

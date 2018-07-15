@@ -5,7 +5,6 @@ import { User } from '../user/user.entity';
 
 import { Walker } from './walker.entity';
 import { WalkerRepository } from './walker.repository';
-import { WalkerListResponseDto } from '@petman/common';
 
 @Injectable()
 export class WalkerService {
@@ -35,9 +34,9 @@ export class WalkerService {
     await this.walkerRepository.save(walker);
   }
 
-  async getList(offset: number, limit: number): Promise<WalkerListResponseDto> {
+  async getList(offset: number, limit: number) {
     const data = await this.walkerRepository.getList(offset, limit);
 
-    return { total: data[1], list: data[0] } as WalkerListResponseDto;
+    return { total: data[1], list: data[0] };
   }
 }

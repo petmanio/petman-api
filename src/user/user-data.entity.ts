@@ -15,6 +15,12 @@ export class UserData {
   @Column({ nullable: true })
   facebook: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  messanger: string;
+
   @Column({ name: 'first_name' })
   firstName: string;
 
