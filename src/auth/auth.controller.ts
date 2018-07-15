@@ -21,14 +21,14 @@ export class AuthController {
   }
 
   @ApiOperation({ title: 'Login' })
-  @ApiResponse({ status: 501 })
+  @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
   @Post('login')
   async login(@Res() res): Promise<void> {
     res.status(HttpStatus.NOT_IMPLEMENTED).send();
   }
 
   @ApiOperation({ title: 'Login with facebook' })
-  @ApiResponse({ status: 200, type: LoginFacebookResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: LoginFacebookResponseDto })
   @Post('login/fb')
   async loginWithFacebook(@Body() loginFacebookRequestDto: LoginFacebookRequestDto): Promise<LoginFacebookResponseDto> {
     const fbUser = await this.authService.getUserFbDataByAccessToken(loginFacebookRequestDto.accessToken);
@@ -37,7 +37,7 @@ export class AuthController {
   }
 
   @ApiOperation({ title: 'Get current user' })
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Get('user')
   @UseGuards(AuthGuard)
   async user(@UserParam() user) {

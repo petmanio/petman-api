@@ -54,21 +54,21 @@ export class PoiController {
   @ApiOperation({ title: 'Get' })
   @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
   @Get(':id')
-  async findById(@Res() res) {
+  async get(@Res() res) {
     res.status(HttpStatus.NOT_IMPLEMENTED).end();
   }
 
   @ApiOperation({ title: 'Update' })
   @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
   @Put(':id')
-  async updateById(@Res() res) {
+  async update(@Res() res) {
     res.status(HttpStatus.NOT_IMPLEMENTED).end();
   }
 
   @ApiOperation({ title: 'Delete' })
   @ApiResponse({ status: HttpStatus.NOT_IMPLEMENTED })
   @Delete(':id')
-  async deleteById(@Res() res) {
+  async delete(@Res() res) {
     res.status(HttpStatus.NOT_IMPLEMENTED).end();
   }
 

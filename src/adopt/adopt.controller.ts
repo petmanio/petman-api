@@ -21,7 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { AdoptCreateRequestDto, AdoptDto, AdoptListResponseDto, ListQueryRequestDto } from '@petman/common';
+import { AdoptDto, AdoptListResponseDto, AdoptRequestDto, ListQueryRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -51,7 +51,7 @@ export class AdoptController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Post('/')
-  async create(@Body() body: AdoptCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<AdoptDto> {
+  async create(@Body() body: AdoptRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<AdoptDto> {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const adopt = await this.adoptService.create(body.description, body.price, body.images, selectedUser);
@@ -65,7 +65,7 @@ export class AdoptController {
   @ApiResponse({ status: 200, type: AdoptDto })
   @UseGuards(AdoptExistsGuard)
   @Get(':id')
-  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @AdoptParam() adopt: Adopt): Promise<AdoptDto> {
+  async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @AdoptParam() adopt: Adopt): Promise<AdoptDto> {
     const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
     adoptDto.isOwner = adoptDto.user.id === (selectedUser && selectedUser.id);
 
@@ -77,9 +77,9 @@ export class AdoptController {
   @UseGuards(AuthGuard, AdoptExistsGuard, AdoptOwnerGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Put(':id')
-  async updateById(
+  async update(
     @Param('id') id: string,
-    @Body() body: AdoptDto,
+    @Body() body: AdoptRequestDto,
     @UploadedFiles() images,
     @AdoptParam() adopt: Adopt,
   ): Promise<AdoptDto> {
@@ -100,7 +100,7 @@ export class AdoptController {
   @ApiResponse({ status: 204 })
   @UseGuards(AuthGuard, AdoptExistsGuard, AdoptOwnerGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string, @AdoptParam() adopt: Adopt, @Res() res): Promise<void> {
+  async delete(@Param('id') id: string, @AdoptParam() adopt: Adopt, @Res() res): Promise<void> {
 
     await this.adoptService.delete(adopt);
     res.status(HttpStatus.NO_CONTENT).end();

@@ -11,7 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cors({ credentials: true, origin: config.get('allowedOrigin') }));
   app.use('/upload', express.static(config.get('uploadDir')));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true }));
   // TODO: app.useStaticAssets(config.get('uploadDir'));
 
   const options = new DocumentBuilder()

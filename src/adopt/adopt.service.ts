@@ -26,8 +26,7 @@ export class AdoptService {
     adopt.price = price;
     adopt.description = description;
     adopt.images = images;
-    await this.adoptRepository.save(adopt);
-    return adopt;
+    return await this.adoptRepository.save(adopt);
   }
 
   async delete(adopt: Adopt) {

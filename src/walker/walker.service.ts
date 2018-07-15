@@ -25,8 +25,7 @@ export class WalkerService {
   async update(walker: Walker, description: string, price: number): Promise<Walker> {
     walker.price = price;
     walker.description = description;
-    await this.walkerRepository.save(walker);
-    return walker;
+    return await this.walkerRepository.save(walker);
   }
 
   async delete(walker: Walker) {

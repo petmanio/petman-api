@@ -22,7 +22,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryRequestDto, ShelterCreateRequestDto, ShelterDto, ShelterListResponseDto } from '@petman/common';
+import { ListQueryRequestDto, ShelterDto, ShelterListResponseDto, ShelterRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -53,7 +53,7 @@ export class ShelterController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Post('/')
-  async create(@Body() body: ShelterCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<ShelterDto> {
+  async create(@Body() body: ShelterRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<ShelterDto> {
     if (!images.length) {
       throw new BadRequestException();
     }
@@ -67,10 +67,10 @@ export class ShelterController {
   }
 
   @ApiOperation({ title: 'Get' })
-  @ApiResponse({ status: 200, type: ShelterDto })
+  @ApiResponse({ status: HttpStatus.OK, type: ShelterDto })
   @UseGuards(ShelterExistsGuard)
   @Get(':id')
-  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @ShelterParam() shelter: Shelter): Promise<ShelterDto> {
+  async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @ShelterParam() shelter: Shelter): Promise<ShelterDto> {
     const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['petman-api'] });
     shelterDto.isOwner = shelterDto.user.id === (selectedUser && selectedUser.id);
 
@@ -78,13 +78,13 @@ export class ShelterController {
   }
 
   @ApiOperation({ title: 'Update' })
-  @ApiResponse({ status: 200, type: ShelterDto })
+  @ApiResponse({ status: HttpStatus.OK, type: ShelterDto })
   @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
   @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Put(':id')
-  async updateById(
+  async update(
     @Param('id') id: string,
-    @Body() body: ShelterDto,
+    @Body() body: ShelterRequestDto,
     @UploadedFiles() images,
     @ShelterParam() shelter: Shelter,
   ): Promise<ShelterDto> {
@@ -105,17 +105,17 @@ export class ShelterController {
   }
 
   @ApiOperation({ title: 'Delete' })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @UseGuards(AuthGuard, ShelterExistsGuard, ShelterOwnerGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<void> {
+  async delete(@Param('id') id: string, @ShelterParam() shelter: Shelter, @Res() res): Promise<void> {
 
     await this.shelterService.delete(shelter);
     res.status(HttpStatus.NO_CONTENT).end();
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: ShelterListResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: ShelterListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListResponseDto> {
     const shelters = await this.shelterService.getList(query.offset, query.limit);

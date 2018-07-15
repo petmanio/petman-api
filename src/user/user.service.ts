@@ -27,4 +27,10 @@ export class UserService {
   async findById(id: number): Promise<User> {
     return this.userRepository.findById(id);
   }
+
+  async update(user: User, facebookUrl: string, phoneNumber: string) {
+    user.userData.phoneNumber = phoneNumber;
+    user.userData.facebookUrl = facebookUrl;
+    await this.userRepository.save(user, { relations: ['userData'] });
+  }
 }

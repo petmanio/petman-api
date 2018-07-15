@@ -21,7 +21,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryRequestDto, LostFoundCreateRequestDto, LostFoundDto, LostFoundListResponseDto } from '@petman/common';
+import { ListQueryRequestDto, LostFoundDto, LostFoundListResponseDto, LostFoundRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -51,7 +51,7 @@ export class LostFoundController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Post('/')
-  async create(@Body() body: LostFoundCreateRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<LostFoundDto> {
+  async create(@Body() body: LostFoundRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<LostFoundDto> {
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const lostFound = await this.lostFoundService.create(body.type, body.description, body.images, selectedUser);
@@ -65,7 +65,7 @@ export class LostFoundController {
   @ApiResponse({ status: 200, type: LostFoundDto })
   @UseGuards(LostFoundExistsGuard)
   @Get(':id')
-  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @LostFoundParam() lostFound: LostFound): Promise<LostFoundDto> {
+  async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @LostFoundParam() lostFound: LostFound): Promise<LostFoundDto> {
     const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['petman-api'] });
     lostFoundDto.isOwner = lostFoundDto.user.id === (selectedUser && selectedUser.id);
 
@@ -77,9 +77,9 @@ export class LostFoundController {
   @UseGuards(AuthGuard, LostFoundExistsGuard, LostFoundOwnerGuard)
   @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
   @Put(':id')
-  async updateById(
+  async update(
     @Param('id') id: string,
-    @Body() body: LostFoundDto,
+    @Body() body: LostFoundRequestDto,
     @UploadedFiles() images,
     @LostFoundParam() lostFound: LostFound,
   ): Promise<LostFoundDto> {
@@ -100,7 +100,7 @@ export class LostFoundController {
   @ApiResponse({ status: 204 })
   @UseGuards(AuthGuard, LostFoundExistsGuard, LostFoundOwnerGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string, @LostFoundParam() lostFound: LostFound, @Res() res): Promise<void> {
+  async delete(@Param('id') id: string, @LostFoundParam() lostFound: LostFound, @Res() res): Promise<void> {
 
     await this.lostFoundService.delete(lostFound);
     res.status(HttpStatus.NO_CONTENT).end();

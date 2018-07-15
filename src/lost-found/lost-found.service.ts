@@ -28,8 +28,7 @@ export class LostFoundService {
     lostFound.type = type;
     lostFound.description = description;
     lostFound.images = images;
-    await this.lostFoundRepository.save(lostFound);
-    return lostFound;
+    return await this.lostFoundRepository.save(lostFound);
   }
 
   async delete(lostFound: LostFound) {

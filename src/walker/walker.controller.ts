@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Put, Qu
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { ListQueryRequestDto, WalkerCreateRequestDto, WalkerDto, WalkerListResponseDto } from '@petman/common';
+import { ListQueryRequestDto, WalkerDto, WalkerListResponseDto, WalkerRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -30,7 +30,7 @@ export class WalkerController {
   @ApiResponse({ status: 200, type: WalkerDto })
   @UseGuards(AuthGuard)
   @Post('/')
-  async create(@Body() body: WalkerCreateRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerDto> {
+  async create(@Body() body: WalkerRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerDto> {
     const walker = await this.walkerService.create(body.description, body.price, selectedUser);
     const walkerDto = plainToClass(WalkerDto, walker, { groups: ['petman-api'] });
     walkerDto.isOwner = true;
@@ -42,7 +42,7 @@ export class WalkerController {
   @ApiResponse({ status: 200, type: WalkerDto })
   @UseGuards(WalkerExistsGuard)
   @Get(':id')
-  async findById(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: Walker): Promise<WalkerDto> {
+  async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: Walker): Promise<WalkerDto> {
     const walkerDto = plainToClass(WalkerDto, walker, { groups: ['petman-api'] });
     walkerDto.isOwner = walkerDto.user.id === (selectedUser && selectedUser.id);
 
@@ -53,9 +53,9 @@ export class WalkerController {
   @ApiResponse({ status: 200, type: WalkerDto })
   @UseGuards(AuthGuard, WalkerExistsGuard, WalkerOwnerGuard)
   @Put(':id')
-  async updateById(
+  async update(
     @Param('id') id: string,
-    @Body() body: WalkerDto,
+    @Body() body: WalkerRequestDto,
     @WalkerParam() walker: Walker,
   ): Promise<WalkerDto> {
     await this.walkerService.update(walker, body.description, body.price);
@@ -69,7 +69,7 @@ export class WalkerController {
   @ApiResponse({ status: 204 })
   @UseGuards(AuthGuard, WalkerExistsGuard, WalkerOwnerGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string, @WalkerParam() walker: Walker, @Res() res): Promise<Response> {
+  async delete(@Param('id') id: string, @WalkerParam() walker: Walker, @Res() res): Promise<Response> {
 
     await this.walkerService.delete(walker);
     return res.status(HttpStatus.NO_CONTENT).end();

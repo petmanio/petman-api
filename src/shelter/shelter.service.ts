@@ -26,8 +26,7 @@ export class ShelterService {
     shelter.price = price;
     shelter.description = description;
     shelter.images = images;
-    await this.shelterRepository.save(shelter);
-    return shelter;
+    return await this.shelterRepository.save(shelter);
   }
 
   async delete(shelter: Shelter) {
