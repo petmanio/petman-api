@@ -12,13 +12,13 @@ export class UserData {
   @Column({ nullable: true })
   avatar: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'facebook_url', nullable: true })
   facebookUrl: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'messenger_url', nullable: true })
   messengerUrl: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'phone_number', nullable: true })
   phoneNumber: string;
 
   @Column({ name: 'first_name' })

@@ -12,25 +12,36 @@ import { UserDataRepository } from './user-data.repository';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserRepository)
-    private userRepository: UserRepository,
+    @InjectRepository(UserRepository) private userRepository: UserRepository,
     @InjectRepository(UserDataRepository)
     private userDataRepository: UserDataRepository,
-  ) {
-  }
+  ) {}
 
   async create(fbUser: FbUserDto, authProvider: AuthProvider): Promise<User> {
     const userData = await this.userDataRepository.createAndSave(fbUser);
-    return await this.userRepository.createAndSave(fbUser.email, userData, authProvider);
+    return await this.userRepository.createAndSave(
+      fbUser.email,
+      userData,
+      authProvider,
+    );
   }
 
   async findById(id: number): Promise<User> {
     return this.userRepository.findById(id);
   }
 
-  async update(user: User, facebookUrl: string, phoneNumber: string) {
+  async update(
+    user: User,
+    firstName: string,
+    lastName: string,
+    facebookUrl: string,
+    phoneNumber: string,
+  ) {
+    user.userData.firstName = firstName;
+    user.userData.lastName = lastName;
     user.userData.phoneNumber = phoneNumber;
     user.userData.facebookUrl = facebookUrl;
-    await this.userRepository.save(user, { relations: ['userData'] });
+    await this.userDataRepository.save(user.userData);
+    return user;
   }
 }

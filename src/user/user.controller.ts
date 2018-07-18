@@ -1,5 +1,17 @@
-import { Body, Controller, Logger, Param, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Logger,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiUseTags,
+} from '@nestjs/swagger';
 
 import { UserDto, UserUpdateRequestDto } from '@petman/common';
 
@@ -16,8 +28,7 @@ import { plainToClass } from 'class-transformer';
 export class UserController {
   private logger = new Logger(UserController.name);
 
-  constructor(private userService: UserService) {
-  }
+  constructor(private userService: UserService) {}
 
   @ApiOperation({ title: 'Update' })
   @ApiResponse({ status: 200, type: UserDto })
@@ -28,7 +39,13 @@ export class UserController {
     @Body() body: UserUpdateRequestDto,
     @SelectedUserParam() selectedUser: User,
   ): Promise<UserDto> {
-    await this.userService.update(selectedUser, body.userData.facebookUrl, body.userData.phoneNumber);
+    await this.userService.update(
+      selectedUser,
+      body.userData.firstName,
+      body.userData.lastName,
+      body.userData.facebookUrl,
+      body.userData.phoneNumber,
+    );
     return plainToClass(UserDto, selectedUser, { groups: ['petman-api'] });
   }
 }
