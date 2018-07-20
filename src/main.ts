@@ -6,13 +6,16 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { AppExceptionFilter } from './app.exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(cors({ credentials: true, origin: config.get('allowedOrigin') }));
-  app.use('/upload', express.static(config.get('uploadDir')));
   app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true }));
+  app.useGlobalFilters(new AppExceptionFilter());
+  app.use(cors({ credentials: true, origin: config.get('allowedOrigin') }));
+
   // TODO: app.useStaticAssets(config.get('uploadDir'));
+  app.use('/upload', express.static(config.get('uploadDir')));
 
   const options = new DocumentBuilder()
     .setTitle('Petman')
