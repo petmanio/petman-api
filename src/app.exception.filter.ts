@@ -1,4 +1,3 @@
-
 import { ExceptionFilter, Catch, ArgumentsHost, Logger } from '@nestjs/common';
 
 @Catch()
@@ -13,8 +12,6 @@ export class AppExceptionFilter implements ExceptionFilter {
 
     this.logger.warn(JSON.stringify(exception.message));
 
-    response
-      .status(status)
-      .json(exception.message);
+    response.status(status).json(exception.message);
   }
 }

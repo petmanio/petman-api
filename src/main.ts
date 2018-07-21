@@ -10,7 +10,9 @@ import { AppExceptionFilter } from './app.exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({ transform: true, forbidUnknownValues: true }),
+  );
   app.useGlobalFilters(new AppExceptionFilter());
   app.use(cors({ credentials: true, origin: config.get('allowedOrigin') }));
 
