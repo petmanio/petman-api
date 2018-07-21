@@ -27,7 +27,7 @@ export class WalkerController {
   }
 
   @ApiOperation({ title: 'Create' })
-  @ApiResponse({ status: 200, type: WalkerDto })
+  @ApiResponse({ status: HttpStatus.OK, type: WalkerDto })
   @UseGuards(AuthGuard)
   @Post('/')
   async create(@Body() body: WalkerRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerDto> {
@@ -39,7 +39,7 @@ export class WalkerController {
   }
 
   @ApiOperation({ title: 'Get' })
-  @ApiResponse({ status: 200, type: WalkerDto })
+  @ApiResponse({ status: HttpStatus.OK, type: WalkerDto })
   @UseGuards(WalkerExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: Walker): Promise<WalkerDto> {
@@ -50,7 +50,7 @@ export class WalkerController {
   }
 
   @ApiOperation({ title: 'Update' })
-  @ApiResponse({ status: 200, type: WalkerDto })
+  @ApiResponse({ status: HttpStatus.OK, type: WalkerDto })
   @UseGuards(AuthGuard, WalkerExistsGuard, WalkerOwnerGuard)
   @Put(':id')
   async update(
@@ -66,17 +66,17 @@ export class WalkerController {
   }
 
   @ApiOperation({ title: 'Delete' })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @UseGuards(AuthGuard, WalkerExistsGuard, WalkerOwnerGuard)
   @Delete(':id')
-  async delete(@Param('id') id: string, @WalkerParam() walker: Walker, @Res() res): Promise<Response> {
+  async delete(@Param('id') id: string, @WalkerParam() walker: Walker, @Res() res): Promise<void> {
 
     await this.walkerService.delete(walker);
-    return res.status(HttpStatus.NO_CONTENT).end();
+    res.status(HttpStatus.NO_CONTENT).end();
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: WalkerListResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: WalkerListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerListResponseDto> {
     const walkers = await this.walkerService.getList(query.offset, query.limit);
@@ -88,6 +88,5 @@ export class WalkerController {
     });
 
     return walkersDto;
-
   }
 }

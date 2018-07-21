@@ -2,6 +2,7 @@ import * as config from 'config';
 import { join } from 'path';
 import { map } from 'lodash';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -21,7 +22,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import { AdoptDto, AdoptListResponseDto, AdoptRequestDto, ListQueryRequestDto } from '@petman/common';
+import { ListQueryRequestDto, AdoptDto, AdoptListResponseDto, AdoptRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -33,6 +34,7 @@ import { AdoptParam } from './adopt-param.decorator';
 import { AdoptExistsGuard } from './adopt-exists.guard';
 import { AdoptOwnerGuard } from './adopt-owner.guard';
 import { Adopt } from './adopt.entity';
+import { SharedService } from '../shared/shared.service';
 
 const UPLOAD_SUB_PATH = '/adoption';
 
@@ -47,11 +49,14 @@ export class AdoptController {
   }
 
   @ApiOperation({ title: 'Create' })
-  @ApiResponse({ status: 200, type: AdoptDto })
+  @ApiResponse({ status: HttpStatus.OK, type: AdoptDto })
   @UseGuards(AuthGuard)
-  @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
+  @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Post('/')
   async create(@Body() body: AdoptRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<AdoptDto> {
+    if (!images.length) {
+      throw new BadRequestException();
+    }
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const adopt = await this.adoptService.create(body.description, body.price, body.images, selectedUser);
@@ -62,7 +67,7 @@ export class AdoptController {
   }
 
   @ApiOperation({ title: 'Get' })
-  @ApiResponse({ status: 200, type: AdoptDto })
+  @ApiResponse({ status: HttpStatus.OK, type: AdoptDto })
   @UseGuards(AdoptExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @AdoptParam() adopt: Adopt): Promise<AdoptDto> {
@@ -73,9 +78,9 @@ export class AdoptController {
   }
 
   @ApiOperation({ title: 'Update' })
-  @ApiResponse({ status: 200, type: AdoptDto })
+  @ApiResponse({ status: HttpStatus.OK, type: AdoptDto })
   @UseGuards(AuthGuard, AdoptExistsGuard, AdoptOwnerGuard)
-  @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
+  @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -83,10 +88,13 @@ export class AdoptController {
     @UploadedFiles() images,
     @AdoptParam() adopt: Adopt,
   ): Promise<AdoptDto> {
+    if (!images.length && !body.images.length) {
+      throw new BadRequestException();
+    }
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
-      ...map(images, image => image.path.replace(config.get('uploadDir'), '')),
-      ...map(body.images, image => image.replace(/^.*(?=(\/images))/, '')),
+      ...map(images, image => join(UPLOAD_SUB_PATH, image.filename)),
+      ...map(body.images, image => join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1])),
     ];
 
     await this.adoptService.update(adopt, body.description, body.price, body.images);
@@ -97,7 +105,7 @@ export class AdoptController {
   }
 
   @ApiOperation({ title: 'Delete' })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @UseGuards(AuthGuard, AdoptExistsGuard, AdoptOwnerGuard)
   @Delete(':id')
   async delete(@Param('id') id: string, @AdoptParam() adopt: Adopt, @Res() res): Promise<void> {
@@ -107,7 +115,7 @@ export class AdoptController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: AdoptListResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: AdoptListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<AdoptListResponseDto> {
     const adoption = await this.adoptService.getList(query.offset, query.limit);
@@ -119,6 +127,5 @@ export class AdoptController {
     });
 
     return adoptionDto;
-
   }
 }

@@ -2,6 +2,7 @@ import * as config from 'config';
 import { join } from 'path';
 import { map } from 'lodash';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -33,6 +34,7 @@ import { LostFoundParam } from './lost-found-param.decorator';
 import { LostFoundExistsGuard } from './lost-found-exists.guard';
 import { LostFoundOwnerGuard } from './lost-found-owner.guard';
 import { LostFound } from './lost-found.entity';
+import { SharedService } from '../shared/shared.service';
 
 const UPLOAD_SUB_PATH = '/lost-found';
 
@@ -47,11 +49,14 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'Create' })
-  @ApiResponse({ status: 200, type: LostFoundDto })
+  @ApiResponse({ status: HttpStatus.OK, type: LostFoundDto })
   @UseGuards(AuthGuard)
-  @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
+  @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Post('/')
   async create(@Body() body: LostFoundRequestDto, @UploadedFiles() images, @SelectedUserParam() selectedUser: User): Promise<LostFoundDto> {
+    if (!images.length) {
+      throw new BadRequestException();
+    }
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
     const lostFound = await this.lostFoundService.create(body.type, body.description, body.images, selectedUser);
@@ -62,7 +67,7 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'Get' })
-  @ApiResponse({ status: 200, type: LostFoundDto })
+  @ApiResponse({ status: HttpStatus.OK, type: LostFoundDto })
   @UseGuards(LostFoundExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @LostFoundParam() lostFound: LostFound): Promise<LostFoundDto> {
@@ -73,9 +78,9 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'Update' })
-  @ApiResponse({ status: 200, type: LostFoundDto })
+  @ApiResponse({ status: HttpStatus.OK, type: LostFoundDto })
   @UseGuards(AuthGuard, LostFoundExistsGuard, LostFoundOwnerGuard)
-  @UseInterceptors(FilesInterceptor('images', 4, { dest: join(config.get('uploadDir'), UPLOAD_SUB_PATH) }))
+  @UseInterceptors(FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))))
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -83,10 +88,13 @@ export class LostFoundController {
     @UploadedFiles() images,
     @LostFoundParam() lostFound: LostFound,
   ): Promise<LostFoundDto> {
+    if (!images.length && !body.images.length) {
+      throw new BadRequestException();
+    }
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
-      ...map(images, image => image.path.replace(config.get('uploadDir'), '')),
-      ...map(body.images, image => image.replace(/^.*(?=(\/images))/, '')),
+      ...map(images, image => join(UPLOAD_SUB_PATH, image.filename)),
+      ...map(body.images, image => join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1])),
     ];
 
     await this.lostFoundService.update(lostFound, body.type, body.description, body.images);
@@ -97,7 +105,7 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'Delete' })
-  @ApiResponse({ status: 204 })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @UseGuards(AuthGuard, LostFoundExistsGuard, LostFoundOwnerGuard)
   @Delete(':id')
   async delete(@Param('id') id: string, @LostFoundParam() lostFound: LostFound, @Res() res): Promise<void> {
@@ -107,7 +115,7 @@ export class LostFoundController {
   }
 
   @ApiOperation({ title: 'List' })
-  @ApiResponse({ status: 200, type: LostFoundListResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: LostFoundListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<LostFoundListResponseDto> {
     const lostFound = await this.lostFoundService.getList(query.offset, query.limit);
@@ -119,6 +127,5 @@ export class LostFoundController {
     });
 
     return lostFoundDto;
-
   }
 }
