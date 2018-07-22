@@ -14,16 +14,15 @@ export class AdoptService {
   ) {
   }
 
-  async create(description: string, price: number, images: string[], user: User): Promise<Adopt> {
-    return await this.adoptRepository.createAndSave(description, price, images, user);
+  async create(description: string, images: string[], user: User): Promise<Adopt> {
+    return await this.adoptRepository.createAndSave(description, images, user);
   }
 
   async findById(id: number): Promise<Adopt> {
     return await this.adoptRepository.findById(id);
   }
 
-  async update(adopt: Adopt, description: string, price: number, images: string[]): Promise<Adopt> {
-    adopt.price = price;
+  async update(adopt: Adopt, description: string, images: string[]): Promise<Adopt> {
     adopt.description = description;
     adopt.images = images;
     return await this.adoptRepository.save(adopt);

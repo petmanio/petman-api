@@ -10,7 +10,7 @@ export class AppExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     const status = exception.getStatus();
 
-    this.logger.warn(JSON.stringify(exception.message));
+    this.logger.warn(JSON.stringify(exception.message, null, 2));
 
     response.status(status).json(exception.message);
   }

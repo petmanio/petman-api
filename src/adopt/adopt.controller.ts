@@ -59,7 +59,7 @@ export class AdoptController {
     }
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
-    const adopt = await this.adoptService.create(body.description, body.price, body.images, selectedUser);
+    const adopt = await this.adoptService.create(body.description, body.images, selectedUser);
     const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
     adoptDto.isOwner = true;
 
@@ -97,7 +97,7 @@ export class AdoptController {
       ...map(body.images, image => join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1])),
     ];
 
-    await this.adoptService.update(adopt, body.description, body.price, body.images);
+    await this.adoptService.update(adopt, body.description, body.images);
     const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
     adoptDto.isOwner = true;
 

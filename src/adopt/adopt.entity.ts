@@ -9,9 +9,6 @@ export class Adopt {
   @Column('text')
   description: string;
 
-  @Column('double precision')
-  price: number;
-
   @Column('simple-array')
   images: string[];
 

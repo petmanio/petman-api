@@ -6,10 +6,9 @@ import { Adopt } from './adopt.entity';
 
 @EntityRepository(Adopt)
 export class AdoptRepository extends Repository<Adopt> {
-  async createAndSave(description: string, price: number, images: string[], user: User): Promise<Adopt> {
+  async createAndSave(description: string, images: string[], user: User): Promise<Adopt> {
     const adopt = this.create();
     adopt.description = description;
-    adopt.price = price;
     adopt.images = images;
     adopt.user = user;
 
