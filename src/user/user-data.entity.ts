@@ -6,7 +6,7 @@ import { Gender } from '@petman/common';
 export class UserData {
   @PrimaryGeneratedColumn() id: number;
 
-  @Column({ type: 'enum', enum: Gender, nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   gender: Gender;
 
   @Column({ nullable: true })

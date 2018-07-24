@@ -8,7 +8,7 @@ import { User } from '../user/user.entity';
 export class LostFound {
   @PrimaryGeneratedColumn() id: number;
 
-  @Column({ type: 'enum', enum: LostFoundType })
+  @Column({ type: 'varchar' })
   type: LostFoundType;
 
   @Column('text')

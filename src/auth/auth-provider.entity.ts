@@ -11,7 +11,7 @@ export class AuthProvider {
   @Column({ name: 'external_id', unique: true })
   externalId: string;
 
-  @Column({ type: 'enum', enum: AuthProviderType })
+  @Column({ type: 'varchar' })
   type: AuthProviderType;
 
   @Column({ name: 'access_token' })

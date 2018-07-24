@@ -36,7 +36,7 @@ import { LostFoundOwnerGuard } from './lost-found-owner.guard';
 import { LostFound } from './lost-found.entity';
 import { SharedService } from '../shared/shared.service';
 
-const UPLOAD_SUB_PATH = '/images/lost-found';
+const UPLOAD_SUB_PATH = '/lost-found';
 
 @ApiBearerAuth()
 @ApiUseTags('Lost Found')

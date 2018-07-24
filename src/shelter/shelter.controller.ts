@@ -36,7 +36,7 @@ import { ShelterOwnerGuard } from './shelter-owner.guard';
 import { Shelter } from './shelter.entity';
 import { SharedService } from '../shared/shared.service';
 
-const UPLOAD_SUB_PATH = '/images/shelters';
+const UPLOAD_SUB_PATH = '/shelters';
 
 @ApiBearerAuth()
 @ApiUseTags('Shelters')
