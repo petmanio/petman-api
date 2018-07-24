@@ -36,7 +36,7 @@ import { AdoptOwnerGuard } from './adopt-owner.guard';
 import { Adopt } from './adopt.entity';
 import { SharedService } from '../shared/shared.service';
 
-const UPLOAD_SUB_PATH = '/adoption';
+const UPLOAD_SUB_PATH = '/images/adoption';
 
 @ApiBearerAuth()
 @ApiUseTags('Adoption')
