@@ -71,7 +71,11 @@ export class LostFoundController {
   @UseGuards(LostFoundExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @LostFoundParam() lostFound: LostFound): Promise<LostFoundDto> {
-    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups: ['petman-api'] });
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
+    const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups });
     lostFoundDto.isOwner = lostFoundDto.user.id === (selectedUser && selectedUser.id);
 
     return lostFoundDto;
@@ -118,8 +122,12 @@ export class LostFoundController {
   @ApiResponse({ status: HttpStatus.OK, type: LostFoundListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<LostFoundListResponseDto> {
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
     const lostFound = await this.lostFoundService.getList(query.offset, query.limit);
-    const lostFoundDto = plainToClass(LostFoundListResponseDto, lostFound, { groups: ['petman-api'] });
+    const lostFoundDto = plainToClass(LostFoundListResponseDto, lostFound, { groups });
 
     lostFoundDto.list = map(lostFoundDto.list, (item) => {
       item.isOwner = item.user.id === (selectedUser && selectedUser.id);

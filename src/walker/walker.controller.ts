@@ -43,7 +43,11 @@ export class WalkerController {
   @UseGuards(WalkerExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @WalkerParam() walker: Walker): Promise<WalkerDto> {
-    const walkerDto = plainToClass(WalkerDto, walker, { groups: ['petman-api'] });
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
+    const walkerDto = plainToClass(WalkerDto, walker, { groups });
     walkerDto.isOwner = walkerDto.user.id === (selectedUser && selectedUser.id);
 
     return walkerDto;
@@ -79,8 +83,12 @@ export class WalkerController {
   @ApiResponse({ status: HttpStatus.OK, type: WalkerListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<WalkerListResponseDto> {
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
     const walkers = await this.walkerService.getList(query.offset, query.limit);
-    const walkersDto = plainToClass(WalkerListResponseDto, walkers, { groups: ['petman-api'] });
+    const walkersDto = plainToClass(WalkerListResponseDto, walkers, { groups });
 
     walkersDto.list = map(walkersDto.list, (walker) => {
       walker.isOwner = walker.user.id === (selectedUser && selectedUser.id);

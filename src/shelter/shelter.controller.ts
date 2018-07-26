@@ -71,7 +71,11 @@ export class ShelterController {
   @UseGuards(ShelterExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @ShelterParam() shelter: Shelter): Promise<ShelterDto> {
-    const shelterDto = plainToClass(ShelterDto, shelter, { groups: ['petman-api'] });
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
+    const shelterDto = plainToClass(ShelterDto, shelter, { groups });
     shelterDto.isOwner = shelterDto.user.id === (selectedUser && selectedUser.id);
 
     return shelterDto;
@@ -118,8 +122,12 @@ export class ShelterController {
   @ApiResponse({ status: HttpStatus.OK, type: ShelterListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<ShelterListResponseDto> {
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
     const shelters = await this.shelterService.getList(query.offset, query.limit);
-    const sheltersDto = plainToClass(ShelterListResponseDto, shelters, { groups: ['petman-api'] });
+    const sheltersDto = plainToClass(ShelterListResponseDto, shelters, { groups });
 
     sheltersDto.list = map(sheltersDto.list, (shelter) => {
       shelter.isOwner = shelter.user.id === (selectedUser && selectedUser.id);

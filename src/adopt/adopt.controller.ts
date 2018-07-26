@@ -71,7 +71,11 @@ export class AdoptController {
   @UseGuards(AdoptExistsGuard)
   @Get(':id')
   async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @AdoptParam() adopt: Adopt): Promise<AdoptDto> {
-    const adoptDto = plainToClass(AdoptDto, adopt, { groups: ['petman-api'] });
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
+    const adoptDto = plainToClass(AdoptDto, adopt, { groups });
     adoptDto.isOwner = adoptDto.user.id === (selectedUser && selectedUser.id);
 
     return adoptDto;
@@ -118,8 +122,12 @@ export class AdoptController {
   @ApiResponse({ status: HttpStatus.OK, type: AdoptListResponseDto })
   @Get('/')
   async list(@Query() query: ListQueryRequestDto, @SelectedUserParam() selectedUser: User): Promise<AdoptListResponseDto> {
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
     const adoption = await this.adoptService.getList(query.offset, query.limit);
-    const adoptionDto = plainToClass(AdoptListResponseDto, adoption, { groups: ['petman-api'] });
+    const adoptionDto = plainToClass(AdoptListResponseDto, adoption, { groups });
 
     adoptionDto.list = map(adoptionDto.list, (adopt) => {
       adopt.isOwner = adopt.user.id === (selectedUser && selectedUser.id);
