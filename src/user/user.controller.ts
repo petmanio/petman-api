@@ -5,6 +5,11 @@ import {
   Param,
   Put,
   UseGuards,
+  Get,
+  HttpStatus,
+  Req,
+  Res,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -12,8 +17,9 @@ import {
   ApiResponse,
   ApiUseTags,
 } from '@nestjs/swagger';
+import { lookup } from 'geoip-lite';
 
-import { UserDto, UserUpdateRequestDto } from '@petman/common';
+import { UserDto, UserUpdateRequestDto, UserGeoDto } from '@petman/common';
 
 import { AuthGuard } from '../shared/auth.guard';
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
@@ -30,8 +36,23 @@ export class UserController {
 
   constructor(private userService: UserService) {}
 
+  @ApiOperation({ title: 'Get goe info' })
+  @ApiResponse({ status: HttpStatus.OK, type: UserGeoDto })
+  @Get('geo')
+  async geo(@Req() req, @Res() res, @Headers('x-forwarded-for') remoteIP) {
+    res
+      .status(HttpStatus.OK)
+      .send(
+        plainToClass(
+          UserGeoDto,
+          lookup(remoteIP || req.connection.remoteAddress),
+          { groups: ['petman-api'] },
+        ),
+      );
+  }
+
   @ApiOperation({ title: 'Update' })
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @UseGuards(AuthGuard, UserOwnerGuard)
   @Put(':id')
   async update(
