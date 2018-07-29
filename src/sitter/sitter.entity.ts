@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 import { User } from '../user/user.entity';
 
 @Entity()
-export class Shelter {
+export class Sitter {
   @PrimaryGeneratedColumn() id: number;
 
   @Column('text')

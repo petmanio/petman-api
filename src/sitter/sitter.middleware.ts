@@ -1,10 +1,10 @@
 import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';
 
-import { ShelterService } from './shelter.service';
+import { SitterService } from './sitter.service';
 
 @Injectable()
-export class ShelterMiddleware implements NestMiddleware {
-  constructor(private shelterService: ShelterService) {
+export class SitterMiddleware implements NestMiddleware {
+  constructor(private sitterService: SitterService) {
   }
 
   async resolve(name: string): Promise<MiddlewareFunction> {
@@ -13,7 +13,7 @@ export class ShelterMiddleware implements NestMiddleware {
       if (!req.params.id) {
         return next();
       }
-      req.shelter = await this.shelterService.findById(req.params.id);
+      req.sitter = await this.sitterService.findById(req.params.id);
       next();
     };
   }

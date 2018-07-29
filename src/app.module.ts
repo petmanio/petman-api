@@ -5,7 +5,7 @@ import * as config from 'config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
-import { ShelterModule } from './shelter/shelter.module';
+import { SitterModule } from './sitter/sitter.module';
 import { WalkerModule } from './walker/walker.module';
 import { AdoptModule } from './adopt/adopt.module';
 import { LostFoundModule } from './lost-found/lost-found.module';
@@ -22,7 +22,7 @@ import { UserMiddleware } from './shared/user.middleware';
     SharedModule,
     AuthModule,
     UserModule,
-    ShelterModule,
+    SitterModule,
     WalkerModule,
     AdoptModule,
     LostFoundModule,

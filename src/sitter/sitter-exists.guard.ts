@@ -2,12 +2,12 @@ import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@n
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class ShelterExistsGuard implements CanActivate {
+export class SitterExistsGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    if (request.shelter) {
+    if (request.sitter) {
       return true;
     }
     throw new NotFoundException();
