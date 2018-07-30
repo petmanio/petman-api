@@ -20,10 +20,21 @@ import {
 import { plainToClass } from 'class-transformer';
 import { lookup } from 'geoip-lite';
 
-import { UserDto, UserUpdateRequestDto, UserGeoDto } from '@petman/common';
+import {
+  UserDto,
+  UserUpdateRequestDto,
+  UserGeoDto,
+  UserApplicationType,
+  UserApplicationDto,
+} from '@petman/common';
 
 import { AuthGuard } from '../shared/auth.guard';
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
+import { SitterService } from '../sitter/sitter.service';
+import { WalkerService } from '../walker/walker.service';
+import { AdoptService } from '../adopt/adopt.service';
+import { LostFoundService } from '../lost-found/lost-found.service';
+
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserEntityParam } from './user-entity-param.decorator';
@@ -36,7 +47,13 @@ import { UserOwnerGuard } from './user-owner.guard';
 export class UserController {
   private logger = new Logger(UserController.name);
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private sitterService: SitterService,
+    private walkerService: WalkerService,
+    private adoptService: AdoptService,
+    private lostFoundService: LostFoundService,
+  ) {}
 
   @ApiOperation({ title: 'Get goe info' })
   @ApiResponse({ status: HttpStatus.OK, type: UserGeoDto })
@@ -57,7 +74,11 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @UseGuards(UserExistsGuard)
   @Get(':id')
-  async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @UserEntityParam() userEntity: User): Promise<UserDto> {
+  async get(
+    @Param('id') id: string,
+    @SelectedUserParam() selectedUser: User,
+    @UserEntityParam() userEntity: User,
+  ): Promise<UserDto> {
     const groups = ['petman-api'];
     if (!selectedUser) {
       groups.push('petman-unauthorised');
@@ -66,6 +87,53 @@ export class UserController {
     userDto.isOwner = userDto.id === (selectedUser && selectedUser.id);
 
     return userDto;
+  }
+
+  @ApiOperation({ title: 'Get' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: UserApplicationDto,
+    isArray: true,
+  })
+  @Get(':id/applications')
+  async aplications(
+    @Param('id') id: string,
+    @SelectedUserParam() selectedUser: User,
+  ): Promise<UserApplicationDto[]> {
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
+
+    const sitters = await this.sitterService.findByUserId(parseInt(id, 0));
+    const walkers = await this.walkerService.findByUserId(parseInt(id, 0));
+    const adoption = await this.adoptService.findByUserId(parseInt(id, 0));
+    const lostFound = await this.lostFoundService.findByUserId(parseInt(id, 0));
+
+    const userApplicationsResponseDto = plainToClass(
+      UserApplicationDto,
+      [
+        ...sitters.map(sitter => ({
+          data: sitter,
+          type: UserApplicationType.SITTERS,
+        })),
+        ...walkers.map(walker => ({
+          data: walker,
+          type: UserApplicationType.WALKER,
+        })),
+        ...adoption.map(adopt => ({
+          data: adopt,
+          type: UserApplicationType.ADOPTION,
+        })),
+        ...lostFound.map(lostFoundItem => ({
+          data: lostFoundItem,
+          type: UserApplicationType.LOST_FOUND,
+        })),
+      ],
+      { groups },
+    );
+
+    return userApplicationsResponseDto;
   }
 
   @ApiOperation({ title: 'Update' })

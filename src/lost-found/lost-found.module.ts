@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  forwardRef,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedModule } from '../shared/shared.module';
@@ -12,9 +17,13 @@ import { LostFoundExistsGuard } from './lost-found-exists.guard';
 import { LostFoundOwnerGuard } from './lost-found-owner.guard';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LostFound, LostFoundRepository]), SharedModule],
+  imports: [
+    TypeOrmModule.forFeature([LostFound, LostFoundRepository]),
+    forwardRef(() => SharedModule),
+  ],
   providers: [LostFoundService, LostFoundExistsGuard, LostFoundOwnerGuard],
   controllers: [LostFoundController],
+  exports: [LostFoundService],
 })
 export class LostFoundModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

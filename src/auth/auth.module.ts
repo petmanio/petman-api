@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedModule } from '../shared/shared.module';
@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthProvider, AuthProviderRepository]), SharedModule, UserModule],
+  imports: [TypeOrmModule.forFeature([AuthProvider, AuthProviderRepository]), forwardRef(() => SharedModule), forwardRef(() => UserModule)],
   controllers: [AuthController],
   providers: [AuthService],
 })

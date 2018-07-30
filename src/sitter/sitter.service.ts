@@ -22,6 +22,10 @@ export class SitterService {
     return await this.sitterRepository.findById(id);
   }
 
+  async findByUserId(userId: number): Promise<Sitter[]> {
+    return await this.sitterRepository.findByUserId(userId);
+  }
+
   async update(sitter: Sitter, description: string, price: number, images: string[]): Promise<Sitter> {
     sitter.price = price;
     sitter.description = description;

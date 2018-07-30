@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from '../user/user.module';
@@ -26,7 +26,7 @@ import { CategoryRepository } from './category.repository';
       Address, AddressRepository,
       Category, CategoryRepository,
     ]),
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   providers: [UserMiddleware, AuthGuard, SharedService],
   controllers: [],

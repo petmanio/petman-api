@@ -11,10 +11,13 @@ export class WalkerService {
   constructor(
     @InjectRepository(WalkerRepository)
     private walkerRepository: WalkerRepository,
-  ) {
-  }
+  ) {}
 
-  async create(description: string, price: number, user: User): Promise<Walker> {
+  async create(
+    description: string,
+    price: number,
+    user: User,
+  ): Promise<Walker> {
     return await this.walkerRepository.createAndSave(description, price, user);
   }
 
@@ -22,7 +25,15 @@ export class WalkerService {
     return await this.walkerRepository.findById(id);
   }
 
-  async update(walker: Walker, description: string, price: number): Promise<Walker> {
+  async findByUserId(userId: number): Promise<Walker[]> {
+    return await this.walkerRepository.findByUserId(userId);
+  }
+
+  async update(
+    walker: Walker,
+    description: string,
+    price: number,
+  ): Promise<Walker> {
     walker.price = price;
     walker.description = description;
     return await this.walkerRepository.save(walker);

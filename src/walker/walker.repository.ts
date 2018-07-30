@@ -6,7 +6,11 @@ import { Walker } from './walker.entity';
 
 @EntityRepository(Walker)
 export class WalkerRepository extends Repository<Walker> {
-  async createAndSave(description: string, price: number, user: User): Promise<Walker> {
+  async createAndSave(
+    description: string,
+    price: number,
+    user: User,
+  ): Promise<Walker> {
     const walker = this.create();
     walker.description = description;
     walker.price = price;
@@ -18,7 +22,17 @@ export class WalkerRepository extends Repository<Walker> {
   }
 
   async findById(id: number): Promise<Walker> {
-    return await this.findOne({ id, deleted: null }, { relations: ['user', 'user.userData', 'user.authProviders'] });
+    return await this.findOne(
+      { id, deleted: null },
+      { relations: ['user', 'user.userData', 'user.authProviders'] },
+    );
+  }
+
+  async findByUserId(userId: number): Promise<Walker[]> {
+    return await this.find({
+      where: { deleted: null, user: { id: userId } },
+      relations: ['user', 'user.userData', 'user.authProviders'],
+    });
   }
 
   async getList(offset: number, limit: number): Promise<[Walker[], number]> {

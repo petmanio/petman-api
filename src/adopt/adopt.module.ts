@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  forwardRef,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedModule } from '../shared/shared.module';
@@ -12,9 +17,13 @@ import { AdoptExistsGuard } from './adopt-exists.guard';
 import { AdoptOwnerGuard } from './adopt-owner.guard';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Adopt, AdoptRepository]), SharedModule],
+  imports: [
+    TypeOrmModule.forFeature([Adopt, AdoptRepository]),
+    forwardRef(() => SharedModule),
+  ],
   providers: [AdoptService, AdoptExistsGuard, AdoptOwnerGuard],
   controllers: [AdoptController],
+  exports: [AdoptService],
 })
 export class AdoptModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

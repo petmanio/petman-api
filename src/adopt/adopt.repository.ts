@@ -6,7 +6,11 @@ import { Adopt } from './adopt.entity';
 
 @EntityRepository(Adopt)
 export class AdoptRepository extends Repository<Adopt> {
-  async createAndSave(description: string, images: string[], user: User): Promise<Adopt> {
+  async createAndSave(
+    description: string,
+    images: string[],
+    user: User,
+  ): Promise<Adopt> {
     const adopt = this.create();
     adopt.description = description;
     adopt.images = images;
@@ -18,7 +22,17 @@ export class AdoptRepository extends Repository<Adopt> {
   }
 
   async findById(id: number): Promise<Adopt> {
-    return await this.findOne({ id, deleted: null }, { relations: ['user', 'user.userData', 'user.authProviders'] });
+    return await this.findOne(
+      { id, deleted: null },
+      { relations: ['user', 'user.userData', 'user.authProviders'] },
+    );
+  }
+
+  async findByUserId(userId: number): Promise<Adopt[]> {
+    return await this.find({
+      where: { deleted: null, user: { id: userId } },
+      relations: ['user', 'user.userData', 'user.authProviders'],
+    });
   }
 
   async getList(offset: number, limit: number): Promise<[Adopt[], number]> {

@@ -6,7 +6,12 @@ import { Sitter } from './sitter.entity';
 
 @EntityRepository(Sitter)
 export class SitterRepository extends Repository<Sitter> {
-  async createAndSave(description: string, price: number, images: string[], user: User): Promise<Sitter> {
+  async createAndSave(
+    description: string,
+    price: number,
+    images: string[],
+    user: User,
+  ): Promise<Sitter> {
     const sitter = this.create();
     sitter.description = description;
     sitter.price = price;
@@ -19,7 +24,17 @@ export class SitterRepository extends Repository<Sitter> {
   }
 
   async findById(id: number): Promise<Sitter> {
-    return await this.findOne({ id, deleted: null }, { relations: ['user', 'user.userData', 'user.authProviders'] });
+    return await this.findOne(
+      { id, deleted: null },
+      { relations: ['user', 'user.userData', 'user.authProviders'] },
+    );
+  }
+
+  async findByUserId(userId: number): Promise<Sitter[]> {
+    return await this.find({
+      where: { deleted: null, user: { id: userId } },
+      relations: ['user', 'user.userData', 'user.authProviders'],
+    });
   }
 
   async getList(offset: number, limit: number): Promise<[Sitter[], number]> {

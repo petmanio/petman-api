@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedModule } from '../shared/shared.module';
@@ -9,7 +9,7 @@ import { PoiService } from './poi.service';
 import { PoiController } from './poi.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Poi, PoiRepository]), SharedModule],
+  imports: [TypeOrmModule.forFeature([Poi, PoiRepository]), forwardRef(() => SharedModule)],
   providers: [PoiService],
   controllers: [PoiController],
 })

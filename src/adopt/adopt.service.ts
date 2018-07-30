@@ -9,12 +9,14 @@ import { AdoptRepository } from './adopt.repository';
 @Injectable()
 export class AdoptService {
   constructor(
-    @InjectRepository(AdoptRepository)
-    private adoptRepository: AdoptRepository,
-  ) {
-  }
+    @InjectRepository(AdoptRepository) private adoptRepository: AdoptRepository,
+  ) {}
 
-  async create(description: string, images: string[], user: User): Promise<Adopt> {
+  async create(
+    description: string,
+    images: string[],
+    user: User,
+  ): Promise<Adopt> {
     return await this.adoptRepository.createAndSave(description, images, user);
   }
 
@@ -22,7 +24,15 @@ export class AdoptService {
     return await this.adoptRepository.findById(id);
   }
 
-  async update(adopt: Adopt, description: string, images: string[]): Promise<Adopt> {
+  async findByUserId(userId: number): Promise<Adopt[]> {
+    return await this.adoptRepository.findByUserId(userId);
+  }
+
+  async update(
+    adopt: Adopt,
+    description: string,
+    images: string[],
+  ): Promise<Adopt> {
     adopt.description = description;
     adopt.images = images;
     return await this.adoptRepository.save(adopt);

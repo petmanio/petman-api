@@ -13,18 +13,36 @@ export class LostFoundService {
   constructor(
     @InjectRepository(LostFoundRepository)
     private lostFoundRepository: LostFoundRepository,
-  ) {
-  }
+  ) {}
 
-  async create(type: LostFoundType, description: string, images: string[], user: User): Promise<LostFound> {
-    return await this.lostFoundRepository.createAndSave(type, description, images, user);
+  async create(
+    type: LostFoundType,
+    description: string,
+    images: string[],
+    user: User,
+  ): Promise<LostFound> {
+    return await this.lostFoundRepository.createAndSave(
+      type,
+      description,
+      images,
+      user,
+    );
   }
 
   async findById(id: number): Promise<LostFound> {
     return await this.lostFoundRepository.findById(id);
   }
 
-  async update(lostFound: LostFound, type: LostFoundType, description: string, images: string[]): Promise<LostFound> {
+  async findByUserId(userId: number): Promise<LostFound[]> {
+    return await this.lostFoundRepository.findByUserId(userId);
+  }
+
+  async update(
+    lostFound: LostFound,
+    type: LostFoundType,
+    description: string,
+    images: string[],
+  ): Promise<LostFound> {
     lostFound.type = type;
     lostFound.description = description;
     lostFound.images = images;

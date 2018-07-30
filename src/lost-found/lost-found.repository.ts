@@ -8,7 +8,12 @@ import { LostFound } from './lost-found.entity';
 
 @EntityRepository(LostFound)
 export class LostFoundRepository extends Repository<LostFound> {
-  async createAndSave(type: LostFoundType, description: string, images: string[], user: User): Promise<LostFound> {
+  async createAndSave(
+    type: LostFoundType,
+    description: string,
+    images: string[],
+    user: User,
+  ): Promise<LostFound> {
     const lostFound = this.create();
     lostFound.type = type;
     lostFound.description = description;
@@ -21,7 +26,17 @@ export class LostFoundRepository extends Repository<LostFound> {
   }
 
   async findById(id: number): Promise<LostFound> {
-    return await this.findOne({ id, deleted: null }, { relations: ['user', 'user.userData', 'user.authProviders'] });
+    return await this.findOne(
+      { id, deleted: null },
+      { relations: ['user', 'user.userData', 'user.authProviders'] },
+    );
+  }
+
+  async findByUserId(userId: number): Promise<LostFound[]> {
+    return await this.find({
+      where: { deleted: null, user: { id: userId } },
+      relations: ['user', 'user.userData', 'user.authProviders'],
+    });
   }
 
   async getList(offset: number, limit: number): Promise<[LostFound[], number]> {

@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  forwardRef,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SharedModule } from '../shared/shared.module';
@@ -12,9 +17,13 @@ import { WalkerExistsGuard } from './walker-exists.guard';
 import { WalkerOwnerGuard } from './walker-owner.guard';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Walker, WalkerRepository]), SharedModule],
+  imports: [
+    TypeOrmModule.forFeature([Walker, WalkerRepository]),
+    forwardRef(() => SharedModule),
+  ],
   providers: [WalkerService, WalkerExistsGuard, WalkerOwnerGuard],
   controllers: [WalkerController],
+  exports: [WalkerService],
 })
 export class WalkerModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
