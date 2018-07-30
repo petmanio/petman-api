@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiUseTags,
 } from '@nestjs/swagger';
+import { plainToClass } from 'class-transformer';
 import { lookup } from 'geoip-lite';
 
 import { UserDto, UserUpdateRequestDto, UserGeoDto } from '@petman/common';
@@ -25,8 +26,9 @@ import { AuthGuard } from '../shared/auth.guard';
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { UserEntityParam } from './user-entity-param.decorator';
+import { UserExistsGuard } from './user-exists.guard';
 import { UserOwnerGuard } from './user-owner.guard';
-import { plainToClass } from 'class-transformer';
 
 @ApiBearerAuth()
 @ApiUseTags('Users')
@@ -49,6 +51,21 @@ export class UserController {
           { groups: ['petman-api'] },
         ),
       );
+  }
+
+  @ApiOperation({ title: 'Get' })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
+  @UseGuards(UserExistsGuard)
+  @Get(':id')
+  async get(@Param('id') id: string, @SelectedUserParam() selectedUser: User, @UserEntityParam() userEntity: User): Promise<UserDto> {
+    const groups = ['petman-api'];
+    if (!selectedUser) {
+      groups.push('petman-unauthorised');
+    }
+    const userDto = plainToClass(UserDto, userEntity, { groups });
+    userDto.isOwner = userDto.id === (selectedUser && selectedUser.id);
+
+    return userDto;
   }
 
   @ApiOperation({ title: 'Update' })

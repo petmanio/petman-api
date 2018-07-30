@@ -21,4 +21,8 @@ export class UserRepository extends Repository<User> {
   async findById(id: number): Promise<User> {
     return await this.findOne({ id, deleted: null }, { relations: ['userData', 'authProviders', 'businessUsers', 'businessUsers.userData'] });
   }
+
+  async findByIdWithUserData(id: number): Promise<User> {
+    return await this.findOne({ id, deleted: null }, { relations: ['userData', 'authProviders'] });
+  }
 }

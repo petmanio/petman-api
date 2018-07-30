@@ -6,6 +6,7 @@ import { LoginFacebookRequestDto, LoginFacebookResponseDto, UserDto } from '@pet
 
 import { UserParam } from '../shared/user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
+import { User } from 'user/user.entity';
 
 import { AuthService } from './auth.service';
 
@@ -41,6 +42,8 @@ export class AuthController {
   @Get('user')
   @UseGuards(AuthGuard)
   async user(@UserParam() user) {
-    return plainToClass(UserDto, user, { groups: ['petman-api'] });
+    const userDto = plainToClass<UserDto, User>(UserDto, user, { groups: ['petman-api'] });
+    userDto.isOwner = true;
+    return userDto;
   }
 }

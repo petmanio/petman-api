@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { merge } from 'lodash';
 
 import { FbUserDto } from '@petman/common';
 
@@ -30,6 +31,10 @@ export class UserService {
     return this.userRepository.findById(id);
   }
 
+  async findByIdWithUserData(id: number): Promise<User> {
+    return this.userRepository.findByIdWithUserData(id);
+  }
+
   async update(
     user: User,
     firstName: string,
@@ -37,10 +42,7 @@ export class UserService {
     facebookUrl: string,
     phoneNumber: string,
   ) {
-    user.userData.firstName = firstName;
-    user.userData.lastName = lastName;
-    user.userData.phoneNumber = phoneNumber;
-    user.userData.facebookUrl = facebookUrl;
+    user.userData = merge(user.userData, { firstName, lastName, facebookUrl, phoneNumber })
     await this.userDataRepository.save(user.userData);
     return user;
   }

@@ -14,7 +14,7 @@
     "database": "petman",
     "entities": ["src/**/**.entity{.ts,.js}"],
     "synchronize": false,
-    "logging": true
+    "logging": false
   },
   "fb": {
     "appId": "614253672289323",
