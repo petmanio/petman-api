@@ -35,10 +35,10 @@ export class User {
   @JoinTable()
   businessUsers: User[];
 
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ name: 'is_sitter', type: 'boolean', nullable: true })
   isSitter: boolean;
 
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ name: 'is_walker', type: 'boolean', nullable: true })
   isWalker: boolean;
 
   @CreateDateColumn() created: Date;
