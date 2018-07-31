@@ -42,8 +42,21 @@ export class UserService {
     facebookUrl: string,
     phoneNumber: string,
   ) {
-    user.userData = merge(user.userData, { firstName, lastName, facebookUrl, phoneNumber })
+    user.userData = merge(user.userData, {
+      firstName,
+      lastName,
+      facebookUrl,
+      phoneNumber,
+    });
     await this.userDataRepository.save(user.userData);
     return user;
+  }
+
+  async setSitter(id: number, isSitter) {
+    await this.userRepository.update({ id }, { isSitter });
+  }
+
+  async setWalker(id: number, isWalker) {
+    await this.userRepository.update({ id }, { isWalker });
   }
 }

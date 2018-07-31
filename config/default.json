@@ -13,7 +13,7 @@
     "password": "andant",
     "database": "petman",
     "entities": ["src/**/**.entity{.ts,.js}"],
-    "synchronize": false,
+    "synchronize": true,
     "logging": false
   },
   "fb": {

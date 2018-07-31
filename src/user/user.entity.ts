@@ -35,13 +35,16 @@ export class User {
   @JoinTable()
   businessUsers: User[];
 
-  @CreateDateColumn()
-  created: Date;
+  @Column({ type: 'boolean', nullable: true })
+  isSitter: boolean;
 
-  @UpdateDateColumn()
-  updated: Date;
+  @Column({ type: 'boolean', nullable: true })
+  isWalker: boolean;
+
+  @CreateDateColumn() created: Date;
+
+  @UpdateDateColumn() updated: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted: Date;
-
 }
