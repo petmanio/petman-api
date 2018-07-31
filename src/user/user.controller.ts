@@ -115,7 +115,7 @@ export class UserController {
       [
         ...sitters.map(sitter => ({
           data: sitter,
-          type: UserApplicationType.SITTERS,
+          type: UserApplicationType.SITTER,
         })),
         ...walkers.map(walker => ({
           data: walker,
@@ -123,7 +123,7 @@ export class UserController {
         })),
         ...adoption.map(adopt => ({
           data: adopt,
-          type: UserApplicationType.ADOPTION,
+          type: UserApplicationType.ADOPT,
         })),
         ...lostFound.map(lostFoundItem => ({
           data: lostFoundItem,
