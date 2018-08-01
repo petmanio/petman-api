@@ -7,7 +7,7 @@ export class SitterOwnerGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    if (request.sitter.user.id === request.user.id) {
+    if (request.sitter.user.id === request.selectedUser.id) {
       return true;
     }
     throw new ForbiddenException();

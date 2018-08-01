@@ -7,7 +7,7 @@ export class LostFoundOwnerGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    if (request.lostFound.user.id === request.user.id) {
+    if (request.lostFound.user.id === request.selectedUser.id) {
       return true;
     }
     throw new ForbiddenException();

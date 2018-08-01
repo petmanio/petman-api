@@ -7,7 +7,7 @@ export class WalkerOwnerGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    if (request.walker.user.id === request.user.id) {
+    if (request.walker.user.id === request.selectedUser.id) {
       return true;
     }
     throw new ForbiddenException();
