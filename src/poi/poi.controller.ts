@@ -1,5 +1,21 @@
-import { Controller, Delete, Get, HttpStatus, Logger, Post, Put, Query, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Logger,
+  Post,
+  Put,
+  Query,
+  Res,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiImplicitQuery,
+  ApiOperation,
+  ApiResponse,
+  ApiUseTags,
+} from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import {
@@ -18,24 +34,38 @@ import { PoiService } from './poi.service';
 @ApiUseTags('Pois')
 @Controller('api/pois')
 export class PoiController {
-
   private logger = new Logger(PoiController.name);
 
-  constructor(private sharedService: SharedService, private poiService: PoiService) {
-  }
+  constructor(
+    private sharedService: SharedService,
+    private poiService: PoiService,
+  ) {}
 
   @ApiOperation({ title: 'Categories' })
   @ApiResponse({ status: 200, type: CategoryListResponseDto })
   @Get('categories')
-  async categories(@Query() query: ListQueryRequestDto): Promise<CategoryListResponseDto> {
-    const categoryListResponseDto = await this.sharedService.getCategories(query.offset, query.limit);
-    return plainToClass(CategoryListResponseDto, categoryListResponseDto, { groups: ['petman-api'] });
+  async categories(
+    @Query() query: ListQueryRequestDto,
+  ): Promise<CategoryListResponseDto> {
+    const categoryListResponseDto = await this.sharedService.getCategories(
+      query.offset,
+      query.limit,
+    );
+    return plainToClass(CategoryListResponseDto, categoryListResponseDto, {
+      groups: ['petman-api'],
+    });
   }
 
   @ApiOperation({ title: 'Pins' })
   @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'primaryCategories', type: Number, isArray: true, required: false, collectionFormat: 'multi' })
+  @ApiImplicitQuery({
+    name: 'primaryCategories',
+    type: Number,
+    isArray: true,
+    required: false,
+    collectionFormat: 'multi',
+  })
   @ApiResponse({ status: 200, type: PinDto, isArray: true })
   @Get('pins')
   async pins(@Query() query: PoiPinsQueryRequestDto): Promise<PinDto[]> {
@@ -75,12 +105,24 @@ export class PoiController {
   @ApiOperation({ title: 'List' })
   @ApiImplicitQuery({ name: 'offset', type: Number })
   @ApiImplicitQuery({ name: 'limit', type: Number })
-  @ApiImplicitQuery({ name: 'primaryCategories', type: Number, isArray: true, required: false, collectionFormat: 'multi' })
-  @ApiResponse({ status: 200, type: PoiListResponseDto })
+  @ApiImplicitQuery({
+    name: 'primaryCategories',
+    type: Number,
+    isArray: true,
+    required: false,
+    collectionFormat: 'multi',
+  })
+  @ApiResponse({ status: HttpStatus.OK, type: PoiListResponseDto })
   @Get('/')
-  async list(@Query() query: PoiListQueryRequestDto): Promise<PoiListResponseDto> {
+  async list(
+    @Query() query: PoiListQueryRequestDto,
+  ): Promise<PoiListResponseDto> {
     const listQueryDto = plainToClass(PoiListQueryRequestDto, query);
-    const pois = await this.poiService.getList(listQueryDto.offset, listQueryDto.limit, listQueryDto.primaryCategories);
+    const pois = await this.poiService.getList(
+      listQueryDto.offset,
+      listQueryDto.limit,
+      listQueryDto.primaryCategories,
+    );
     return plainToClass(PoiListResponseDto, pois, { groups: ['petman-api'] });
   }
 }

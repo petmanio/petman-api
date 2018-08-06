@@ -5,6 +5,7 @@ import { User } from '../user/user.entity';
 
 import { Adopt } from './adopt.entity';
 import { AdoptRepository } from './adopt.repository';
+import { AdoptRequestDto, AdoptListQueryRequestDto } from '@petman/common';
 
 @Injectable()
 export class AdoptService {
@@ -12,12 +13,8 @@ export class AdoptService {
     @InjectRepository(AdoptRepository) private adoptRepository: AdoptRepository,
   ) {}
 
-  async create(
-    description: string,
-    images: string[],
-    user: User,
-  ): Promise<Adopt> {
-    return await this.adoptRepository.createAndSave(description, images, user);
+  async create(body: AdoptRequestDto, user: User): Promise<Adopt> {
+    return await this.adoptRepository.createAndSave(body, user);
   }
 
   async findById(id: number): Promise<Adopt> {
@@ -28,13 +25,14 @@ export class AdoptService {
     return await this.adoptRepository.findByUserId(userId);
   }
 
-  async update(
-    adopt: Adopt,
-    description: string,
-    images: string[],
-  ): Promise<Adopt> {
-    adopt.description = description;
-    adopt.images = images;
+  async update(adopt: Adopt, body: AdoptRequestDto): Promise<Adopt> {
+    adopt.description = body.description;
+    adopt.images = body.images;
+    adopt.gender = body.gender;
+    adopt.type = body.type;
+    adopt.age = body.age;
+    adopt.size = body.size;
+
     return await this.adoptRepository.save(adopt);
   }
 
@@ -43,8 +41,8 @@ export class AdoptService {
     await this.adoptRepository.save(adopt);
   }
 
-  async getList(offset: number, limit: number) {
-    const data = await this.adoptRepository.getList(offset, limit);
+  async getList(query: AdoptListQueryRequestDto) {
+    const data = await this.adoptRepository.getList(query);
 
     return { total: data[1], list: data[0] };
   }

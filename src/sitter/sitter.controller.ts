@@ -77,7 +77,7 @@ export class SitterController {
     @UploadedFiles() images,
     @SelectedUserParam() selectedUser: User,
   ): Promise<SitterDto> {
-    if (!images.length) {
+    if (!images || !images.length) {
       throw new BadRequestException();
     }
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));

@@ -20,11 +20,16 @@ import { CategoryRepository } from './category.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      City, CityRepository,
-      State, StateRepository,
-      Country, CountryRepository,
-      Address, AddressRepository,
-      Category, CategoryRepository,
+      City,
+      CityRepository,
+      State,
+      StateRepository,
+      Country,
+      CountryRepository,
+      Address,
+      AddressRepository,
+      Category,
+      CategoryRepository,
     ]),
     forwardRef(() => UserModule),
   ],
@@ -32,5 +37,4 @@ import { CategoryRepository } from './category.repository';
   controllers: [],
   exports: [AuthGuard, SharedService],
 })
-export class SharedModule {
-}
+export class SharedModule {}
