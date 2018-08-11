@@ -19,17 +19,13 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiUseTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiImplicitQuery, ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
 import {
   ListQueryRequestDto,
   LostFoundDto,
+  LostFoundListQueryRequestDto,
   LostFoundListResponseDto,
   LostFoundRequestDto,
 } from '@petman/common';
@@ -60,13 +56,7 @@ export class LostFoundController {
   @ApiResponse({ status: HttpStatus.OK, type: LostFoundDto })
   @UseGuards(AuthGuard)
   @UseInterceptors(
-    FilesInterceptor(
-      'images',
-      4,
-      SharedService.getMulterConfig(
-        join(config.get('uploadDir'), UPLOAD_SUB_PATH),
-      ),
-    ),
+    FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))),
   )
   @Post('/')
   async create(
@@ -79,12 +69,7 @@ export class LostFoundController {
     }
     body.images = map(images, image => join(UPLOAD_SUB_PATH, image.filename));
 
-    const lostFound = await this.lostFoundService.create(
-      body.type,
-      body.description,
-      body.images,
-      selectedUser,
-    );
+    const lostFound = await this.lostFoundService.create(body, selectedUser);
     const lostFoundDto = plainToClass(LostFoundDto, lostFound, {
       groups: ['petman-api'],
     });
@@ -107,8 +92,7 @@ export class LostFoundController {
       groups.push('petman-unauthorised');
     }
     const lostFoundDto = plainToClass(LostFoundDto, lostFound, { groups });
-    lostFoundDto.isOwner =
-      lostFoundDto.user.id === (selectedUser && selectedUser.id);
+    lostFoundDto.isOwner = lostFoundDto.user.id === (selectedUser && selectedUser.id);
 
     return lostFoundDto;
   }
@@ -117,13 +101,7 @@ export class LostFoundController {
   @ApiResponse({ status: HttpStatus.OK, type: LostFoundDto })
   @UseGuards(AuthGuard, LostFoundExistsGuard, LostFoundOwnerGuard)
   @UseInterceptors(
-    FilesInterceptor(
-      'images',
-      4,
-      SharedService.getMulterConfig(
-        join(config.get('uploadDir'), UPLOAD_SUB_PATH),
-      ),
-    ),
+    FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))),
   )
   @Put(':id')
   async update(
@@ -138,17 +116,10 @@ export class LostFoundController {
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
       ...map(images, image => join(UPLOAD_SUB_PATH, image.filename)),
-      ...map(body.images, image =>
-        join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1]),
-      ),
+      ...map(body.images, image => join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1])),
     ];
 
-    await this.lostFoundService.update(
-      lostFound,
-      body.type,
-      body.description,
-      body.images,
-    );
+    await this.lostFoundService.update(lostFound, body);
     const lostFoundDto = plainToClass(LostFoundDto, lostFound, {
       groups: ['petman-api'],
     });
@@ -161,16 +132,43 @@ export class LostFoundController {
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @UseGuards(AuthGuard, LostFoundExistsGuard, LostFoundOwnerGuard)
   @Delete(':id')
-  async delete(
-    @Param('id') id: string,
-    @LostFoundParam() lostFound: LostFound,
-    @Res() res,
-  ): Promise<void> {
+  async delete(@Param('id') id: string, @LostFoundParam() lostFound: LostFound, @Res() res): Promise<void> {
     await this.lostFoundService.delete(lostFound);
     res.status(HttpStatus.NO_CONTENT).end();
   }
 
   @ApiOperation({ title: 'List' })
+  @ApiImplicitQuery({ name: 'offset', type: Number })
+  @ApiImplicitQuery({ name: 'limit', type: Number })
+  @ApiImplicitQuery({ name: 'applicationType', type: String })
+  @ApiImplicitQuery({
+    name: 'type',
+    type: String,
+    isArray: true,
+    required: false,
+    collectionFormat: 'multi',
+  })
+  @ApiImplicitQuery({
+    name: 'gender',
+    type: String,
+    isArray: true,
+    required: false,
+    collectionFormat: 'multi',
+  })
+  @ApiImplicitQuery({
+    name: 'age',
+    type: String,
+    isArray: true,
+    required: false,
+    collectionFormat: 'multi',
+  })
+  @ApiImplicitQuery({
+    name: 'size',
+    type: String,
+    isArray: true,
+    required: false,
+    collectionFormat: 'multi',
+  })
   @ApiResponse({ status: HttpStatus.OK, type: LostFoundListResponseDto })
   @Get('/')
   async list(
@@ -181,10 +179,9 @@ export class LostFoundController {
     if (!selectedUser) {
       groups.push('petman-unauthorised');
     }
-    const lostFound = await this.lostFoundService.getList(
-      query.offset,
-      query.limit,
-    );
+
+    const listQueryDto = plainToClass(LostFoundListQueryRequestDto, query);
+    const lostFound = await this.lostFoundService.getList(listQueryDto);
     const lostFoundDto = plainToClass(LostFoundListResponseDto, lostFound, {
       groups,
     });

@@ -1,6 +1,15 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-import { LostFoundType } from '@petman/common';
+import { Gender, LostFoundType, PetAge, PetSize, PetType } from '@petman/common';
 
 import { User } from '../user/user.entity';
 
@@ -8,26 +17,37 @@ import { User } from '../user/user.entity';
 export class LostFound {
   @PrimaryGeneratedColumn() id: number;
 
-  @Column({ type: 'varchar' })
-  type: LostFoundType;
+  @Column('text') description: string;
 
-  @Column('text')
-  description: string;
+  @Column('simple-array') images: string[];
 
-  @Column('simple-array')
-  images: string[];
+  @Index()
+  @Column({ type: 'varchar', name: 'application_type' })
+  applicationType: LostFoundType;
+
+  @Index()
+  @Column({ type: 'varchar', nullable: true })
+  type: PetType;
+
+  @Index()
+  @Column({ type: 'varchar', nullable: true })
+  gender: Gender;
+
+  @Index()
+  @Column({ type: 'varchar', nullable: true })
+  size: PetSize;
+
+  @Column({ type: 'varchar', nullable: true })
+  age: PetAge;
 
   @ManyToOne(() => User, user => user.id)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @CreateDateColumn()
-  created: Date;
+  @CreateDateColumn() created: Date;
 
-  @UpdateDateColumn()
-  updated: Date;
+  @UpdateDateColumn() updated: Date;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted: Date;
-
 }

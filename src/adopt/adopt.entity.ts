@@ -2,14 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  Index,
 } from 'typeorm';
 
-import { Gender, PetSize, PetType, PetAge } from '@petman/common';
+import { Gender, PetAge, PetSize, PetType } from '@petman/common';
 
 import { User } from '../user/user.entity';
 

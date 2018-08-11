@@ -1,2 +1,6 @@
 add age, gender, type, age fields on adopt
 add index
+
+add age, gender, type, age fields on lost_found
+add index
+rename old type to applciationType

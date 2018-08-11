@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { LostFoundType } from '@petman/common';
+import { LostFoundListQueryRequestDto, LostFoundRequestDto, LostFoundType } from '@petman/common';
 
 import { User } from '../user/user.entity';
 
@@ -10,23 +10,10 @@ import { LostFoundRepository } from './lost-found.repository';
 
 @Injectable()
 export class LostFoundService {
-  constructor(
-    @InjectRepository(LostFoundRepository)
-    private lostFoundRepository: LostFoundRepository,
-  ) {}
+  constructor(@InjectRepository(LostFoundRepository) private lostFoundRepository: LostFoundRepository) {}
 
-  async create(
-    type: LostFoundType,
-    description: string,
-    images: string[],
-    user: User,
-  ): Promise<LostFound> {
-    return await this.lostFoundRepository.createAndSave(
-      type,
-      description,
-      images,
-      user,
-    );
+  async create(body: LostFoundRequestDto, user: User): Promise<LostFound> {
+    return await this.lostFoundRepository.createAndSave(body, user);
   }
 
   async findById(id: number): Promise<LostFound> {
@@ -37,15 +24,14 @@ export class LostFoundService {
     return await this.lostFoundRepository.findByUserId(userId);
   }
 
-  async update(
-    lostFound: LostFound,
-    type: LostFoundType,
-    description: string,
-    images: string[],
-  ): Promise<LostFound> {
-    lostFound.type = type;
-    lostFound.description = description;
-    lostFound.images = images;
+  async update(lostFound: LostFound, body: LostFoundRequestDto): Promise<LostFound> {
+    lostFound.applicationType = body.applicationType;
+    lostFound.description = body.description;
+    lostFound.images = body.images;
+    lostFound.gender = body.gender;
+    lostFound.type = body.type;
+    lostFound.age = body.age;
+    lostFound.size = body.size;
     return await this.lostFoundRepository.save(lostFound);
   }
 
@@ -54,8 +40,8 @@ export class LostFoundService {
     await this.lostFoundRepository.save(lostFound);
   }
 
-  async getList(offset: number, limit: number) {
-    const data = await this.lostFoundRepository.getList(offset, limit);
+  async getList(query: LostFoundListQueryRequestDto) {
+    const data = await this.lostFoundRepository.getList(query);
 
     return { total: data[1], list: data[0] };
   }

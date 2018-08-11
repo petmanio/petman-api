@@ -9,9 +9,7 @@ import { AdoptRequestDto, AdoptListQueryRequestDto } from '@petman/common';
 
 @Injectable()
 export class AdoptService {
-  constructor(
-    @InjectRepository(AdoptRepository) private adoptRepository: AdoptRepository,
-  ) {}
+  constructor(@InjectRepository(AdoptRepository) private adoptRepository: AdoptRepository) {}
 
   async create(body: AdoptRequestDto, user: User): Promise<Adopt> {
     return await this.adoptRepository.createAndSave(body, user);

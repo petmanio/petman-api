@@ -19,21 +19,10 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiUseTags,
-  ApiImplicitQuery,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiUseTags, ApiImplicitQuery } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 
-import {
-  AdoptListQueryRequestDto,
-  AdoptDto,
-  AdoptListResponseDto,
-  AdoptRequestDto,
-} from '@petman/common';
+import { AdoptListQueryRequestDto, AdoptDto, AdoptListResponseDto, AdoptRequestDto } from '@petman/common';
 
 import { SelectedUserParam } from '../shared/selected-user-param.decorator';
 import { AuthGuard } from '../shared/auth.guard';
@@ -61,13 +50,7 @@ export class AdoptController {
   @ApiResponse({ status: HttpStatus.OK, type: AdoptDto })
   @UseGuards(AuthGuard)
   @UseInterceptors(
-    FilesInterceptor(
-      'images',
-      4,
-      SharedService.getMulterConfig(
-        join(config.get('uploadDir'), UPLOAD_SUB_PATH),
-      ),
-    ),
+    FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))),
   )
   @Post('/')
   async create(
@@ -110,13 +93,7 @@ export class AdoptController {
   @ApiResponse({ status: HttpStatus.OK, type: AdoptDto })
   @UseGuards(AuthGuard, AdoptExistsGuard, AdoptOwnerGuard)
   @UseInterceptors(
-    FilesInterceptor(
-      'images',
-      4,
-      SharedService.getMulterConfig(
-        join(config.get('uploadDir'), UPLOAD_SUB_PATH),
-      ),
-    ),
+    FilesInterceptor('images', 4, SharedService.getMulterConfig(join(config.get('uploadDir'), UPLOAD_SUB_PATH))),
   )
   @Put(':id')
   async update(
@@ -131,9 +108,7 @@ export class AdoptController {
     body.images = typeof body.images === 'string' ? [body.images] : body.images;
     body.images = [
       ...map(images, image => join(UPLOAD_SUB_PATH, image.filename)),
-      ...map(body.images, image =>
-        join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1]),
-      ),
+      ...map(body.images, image => join(UPLOAD_SUB_PATH, image.split(UPLOAD_SUB_PATH)[1])),
     ];
 
     await this.adoptService.update(adopt, body);
@@ -147,11 +122,7 @@ export class AdoptController {
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @UseGuards(AuthGuard, AdoptExistsGuard, AdoptOwnerGuard)
   @Delete(':id')
-  async delete(
-    @Param('id') id: string,
-    @AdoptParam() adopt: Adopt,
-    @Res() res,
-  ): Promise<void> {
+  async delete(@Param('id') id: string, @AdoptParam() adopt: Adopt, @Res() res): Promise<void> {
     await this.adoptService.delete(adopt);
     res.status(HttpStatus.NO_CONTENT).end();
   }
@@ -199,7 +170,6 @@ export class AdoptController {
     }
 
     const listQueryDto = plainToClass(AdoptListQueryRequestDto, query);
-
     const adoption = await this.adoptService.getList(listQueryDto);
     const adoptionDto = plainToClass(AdoptListResponseDto, adoption, {
       groups,
