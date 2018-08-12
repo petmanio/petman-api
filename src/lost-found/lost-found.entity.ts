@@ -37,6 +37,7 @@ export class LostFound {
   @Column({ type: 'varchar', nullable: true })
   size: PetSize;
 
+  @Index()
   @Column({ type: 'varchar', nullable: true })
   age: PetAge;
 

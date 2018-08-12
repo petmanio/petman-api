@@ -1,0 +1,25 @@
+Adopt
+
+ALTER TABLE public.adopt ADD type varchar NULL;
+ALTER TABLE public.adopt ADD gender varchar NULL;
+ALTER TABLE public.adopt ADD size varchar NULL;
+ALTER TABLE public.adopt ADD age varchar NULL;
+
+CREATE INDEX IDX_b3a4128b0f8bd161e7055deb3d ON public.adopt (type);
+CREATE INDEX IDX_05fd38a4d7ada27ad2753c6c8e ON public.adopt (gender);
+CREATE INDEX IDX_aa09c22330749e3e8b3c718edb ON public.adopt (size);
+CREATE INDEX IDX_c5f7880fca910306245496820b ON public.adopt (age);
+
+Lost Found
+
+ALTER TABLE public.lost_found RENAME COLUMN type TO application_type;
+ALTER TABLE public.lost_found ADD type varchar NULL;
+ALTER TABLE public.lost_found ADD gender varchar NULL;
+ALTER TABLE public.lost_found ADD size varchar NULL;
+ALTER TABLE public.lost_found ADD age varchar NULL;
+
+CREATE INDEX IDX_1efa85235581d32380d4f6d0a1 ON public.lost_found (application_type);
+CREATE INDEX IDX_aa1e1f0552bd01ff42bb348e99 ON public.lost_found (type);
+CREATE INDEX IDX_231b9df0eb2e57f1071df3baf8 ON public.lost_found (gender);
+CREATE INDEX IDX_dd88e62ccc87aadfb47c320e23 ON public.lost_found (size);
+CREATE INDEX IDX_cc8fa6a4ce2f2cc84d8f989b7a ON public.lost_found (age);
