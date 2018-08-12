@@ -5,7 +5,6 @@ import { LostFoundListQueryRequestDto, LostFoundRequestDto, LostFoundType } from
 import { User } from '../user/user.entity';
 
 import { LostFound } from './lost-found.entity';
-import { Adopt } from '../adopt/adopt.entity';
 
 @EntityRepository(LostFound)
 export class LostFoundRepository extends Repository<LostFound> {
@@ -40,7 +39,7 @@ export class LostFoundRepository extends Repository<LostFound> {
   async getList(query: LostFoundListQueryRequestDto): Promise<[LostFound[], number]> {
     const filterQuery: FindConditions<LostFound> = {};
     if (query.applicationType) {
-      filterQuery.applicationType = query.applicationType;
+      filterQuery.applicationType = In([query.applicationType]);
     }
     if (query.type && query.type.length) {
       filterQuery.type = In(query.type);
